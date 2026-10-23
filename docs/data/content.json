@@ -35,14 +35,14 @@
     {
       "id": "proposal",
       "title": "Interview preparation and proposed directions",
-      "kind": "Suggested answer",
+      "kind": "Practice script",
       "url": null,
       "description": "Complete spoken answers for proposed plans and interview questions, grounded in the research trajectory. Future experiments are phrased prospectively. Professor questions are scripts to ask, not invented professor responses."
     },
     {
       "id": "concept",
       "title": "Conceptual explanations",
-      "kind": "Study guide",
+      "kind": "Conceptual explanation",
       "url": null,
       "description": "Complete explanations with worked or illustrative examples. Examples explain concepts and are not additional experimental findings."
     }

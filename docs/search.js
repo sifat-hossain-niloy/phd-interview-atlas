@@ -5,7 +5,7 @@ const GROUPS=[
  ['funding','funded','financial','stipend','scholarship'],['phd','ph.d.','doctorate','doctoral'],
  ['calibration','calibrated','ece'],['memory','stateful','history','context'],['leakage','leak','contamination'],
  ['results','result','outcome','findings','performance'],['purpose','motivation','goal'],['baseline','control'],
- ['significance','significant','p-value','statistics'],['professor','supervisor','advisor','adviser'],['cost','budget','compute']
+ ['significance','significant','p-value','statistics'],['professor','supervisor','advisor','adviser'],['cost','budget','compute'],['cot','chain of thought','chain-of-thought'],['apr','automated program repair','program repair']
 ];
 export const normalize=s=>String(s).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9.+_-]+/g,' ').trim();
 const words=s=>normalize(s).split(/[^a-z0-9]+/).filter(Boolean);
@@ -30,14 +30,14 @@ export function parseQuery(query){
 export function createIndex(questions,projects=[]){
  const names=Object.fromEntries(projects.map(p=>[p.id,p.name]));
  return questions.map(q=>{
-  const fields=[q.question,q.tags.join(' '),`${q.project} ${names[q.project]||''} ${q.topic}`,q.answer,q.detail.join(' '),q.caution,q.followups.join(' ')].map(normalize);
+  const fields=[q.question,q.tags.join(' '),`${q.project} ${names[q.project]||''} ${q.topic}`,q.answer,q.detail.join(' '),q.caution,q.followups.join(' '),q.locator].map(normalize);
   const all=fields.join(' '),tokens=[...new Set(words(all))];
   return {q,fields,all,tokens};
  });
 }
 function termMatch(doc,term){
  const value=term.value;
- const weights=[12,9,7,5,2,2,1];
+ const weights=[12,9,7,5,2,2,1,1];
  let score=0;
  doc.fields.forEach((field,i)=>{if(field.includes(value))score=Math.max(score,weights[i]+(field===value?8:0));});
  if(score||term.phrase)return score;

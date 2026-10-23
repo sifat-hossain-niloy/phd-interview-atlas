@@ -25,6 +25,8 @@ test('related terminology and common small typos recover relevant answers',()=>{
  assert.ok(texts('drawbacks').includes('What are the biggest limitations of A-ProS?'));
  assert.ok(texts('calibraton').includes('Can you explain critic calibration?'));
  assert.ok(texts('Excel Agent').some(t=>t.includes('XLAgent')));
+ assert.ok(texts('CoT').includes('Does this prove chain-of-thought caused the better performance?'));
+ assert.ok(texts('"Table 12"').includes('What did the 47-problem memory study show?'));
 });
 test('multiple keywords use intersection, including across answer fields',()=>{
  const hits=search(index,'memory 47');

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#214f43">
+  <meta name="description" content="A searchable interview field guide to LLM-ProS, A-ProS, XLAgent and a research journey in reliable software agents.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Research Interview Atlas · Md Sifat Hossain</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+<aside id="sidebar" aria-label="Main navigation">
+  <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">r<span>i</span></span><span>RESEARCH<br>INTERVIEW ATLAS</span></a>
+  <div class="sidebar-label">YOUR FIELD GUIDE</div>
+  <nav id="main-nav">
+    <a href="#home" data-nav="home"><span aria-hidden="true">◫</span> Overview</a>
+    <a href="#library" data-nav="library"><span aria-hidden="true">⌕</span> Question library <b id="nav-count"></b></a>
+    <a href="#practice" data-nav="practice"><span aria-hidden="true">▷</span> Practice room</a>
+    <a href="#saved" data-nav="saved"><span aria-hidden="true">☆</span> Saved questions <b id="saved-count">0</b></a>
+  </nav>
+  <div class="sidebar-label">THE RESEARCH</div>
+  <nav class="project-nav">
+    <a href="#project/llmpros" data-nav="llmpros"><i class="dot blue"></i> LLM-ProS <small>01</small></a>
+    <a href="#project/apros" data-nav="apros"><i class="dot green"></i> A-ProS <small>02</small></a>
+    <a href="#project/xlagent" data-nav="xlagent"><i class="dot orange"></i> XLAgent <small>03</small></a>
+  </nav>
+  <div class="sidebar-label">BEYOND THE PAPERS</div>
+  <nav>
+    <a href="#ask" data-nav="ask"><span aria-hidden="true">↗</span> Ask the professor</a>
+    <a href="#glossary" data-nav="glossary"><span aria-hidden="true">Aa</span> Concepts & glossary</a>
+    <a href="#sources" data-nav="sources"><span aria-hidden="true">≡</span> Sources & accuracy</a>
+  </nav>
+  <div class="sidebar-footer"><div class="avatar">SH</div><div><strong>Md Sifat Hossain</strong><small>Researcher & software engineer</small></div></div>
+</aside>
+<div class="workspace">
+  <header class="topbar"><button id="menu-toggle" class="icon-button mobile-only" aria-label="Open navigation" aria-expanded="false">☰</button><span id="breadcrumb">Your preparation space</span><div class="top-actions"><span class="local-badge"><i></i> On your device</span><button id="search-shortcut" class="button subtle">Search anything <kbd>/</kbd></button></div></header>
+  <main id="main" tabindex="-1"><div class="loading">Opening your field guide…</div></main>
+  <footer class="page-footer"><span>Build understanding. Practice out loud. Stay precise.</span><a href="#sources">Evidence reviewed 23 Oct 2026 ↗</a></footer>
+</div>
+<dialog id="question-dialog" aria-labelledby="dialog-title"><div id="question-content"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="noscript">This static guide needs JavaScript for search and practice. Enable JavaScript, or read the question data in the GitHub repository.</p></noscript>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "phd-interview-atlas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A searchable research interview field guide for Md Sifat Hossain",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": { "node": ">=20" }
+}

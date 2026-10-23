@@ -1,6 +1,6 @@
 # Research Interview Atlas
 
-A static interview preparation field guide for Md Sifat Hossain, covering LLM-ProS, A-ProS and XLAgent, with 208 answered questions and 39 glossary entries.
+A static interview preparation field guide for Md Sifat Hossain, covering LLM-ProS, A-ProS and XLAgent, with 208 complete structured practice answers and 39 glossary entries.
 
 **[Open the website](https://sifat-hossain-niloy.github.io/phd-interview-atlas/)**
 
@@ -8,7 +8,7 @@ A static interview preparation field guide for Md Sifat Hossain, covering LLM-Pr
 
 - Search question titles, spoken answers, deeper explanations, limitations and follow-up prompts. All keywords must match; quoted phrases, exclusions, related terms and small typos are supported.
 - Filter by subject, topic, depth or essential questions.
-- Open each project for an overview, a spoken pitch, contribution notes, diagrams, numerical results and caveats.
+- Open each project for an overview, a spoken pitch, contribution notes, diagrams, numerical results and caveats. Every question opens a complete answer with three titled sections, written as an actual explanation or first-person response rather than coaching instructions.
 - Use the practice room for randomized sessions, a timer, answer reveal and self-assessed confidence.
 - Save questions and add private notes. Export and import browser study data from Sources & accuracy.
 - Prepare questions for professors about research, funding, applications, supervision and lab culture.
@@ -32,9 +32,11 @@ node scripts/serve.mjs --dist
 
 ## Content and source policy
 
-Edit `docs/data/content.json`. Each question has a stable ID, subject, topic, difficulty, a short spoken answer, deeper points, a caveat, source ID, source locator, keywords and follow-up prompts. Keep IDs stable because links and personal study records use them. `essential` in the tags marks a useful starting question.
+Edit `docs/data/content.json`. Each question has a stable ID, subject, topic, difficulty, a short spoken answer, three `answerSections` with headings and full paragraphs, a caveat, source ID, source locator, keywords and follow-up prompts. Keep IDs stable because links and personal study records use them. `essential` in the tags marks a useful starting question.
 
-The guide distinguishes paper findings, author-provided ownership records, conceptual illustrations and proposed directions. An answer is a starting point to personalize, not an assertion that every suggested experiment or engineering safeguard was implemented.
+The guide distinguishes paper findings, author-provided ownership records, conceptual illustrations and proposed directions. The answers are complete rehearsal scripts. Proposed experiments and engineering designs use prospective language and do not claim implementation. Professor-question entries provide exact questions and follow-ups without inventing the professor's response.
+
+All 208 expanded drafts, comprising 32,469 input words, were processed through 16 WriteHuman MCP batches. Returned paraphrases sometimes changed numbers, omitted content or lost headings. Factual claims and the section structure were checked against the source-based drafts; unsafe changes were rejected or repaired. Only wording changes that preserved the technical meaning were retained. A detector score was not treated as a factual-quality metric.
 
 Reviewed on 23 October 2026:
 

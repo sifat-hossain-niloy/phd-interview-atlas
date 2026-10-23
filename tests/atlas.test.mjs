@@ -67,3 +67,31 @@ test('full corpus queries stay well below one second on this machine',()=>{
  assert.ok(duration<1000,`${duration.toFixed(1)}ms for six queries`);
  console.log(`Search benchmark: six representative queries in ${duration.toFixed(1)} ms.`);
 });
+test('every question has a complete structured answer rather than coaching notes',()=>{
+ assert.equal(data.questions.length,208);
+ assert.equal(data.questions.reduce((n,q)=>n+q.answerSections.length,0),624);
+ const coaching=/^(?:A strong answer|A plausible answer|A defensible answer|Connect |Start |Establish |State |Use |Prepare |Identify |Name |Explain |Keep |Give |Personalize|Choose )/;
+ for(const q of data.questions){
+  assert.equal(q.answerSections.length,3,q.id);
+  assert.ok(!coaching.test(q.answer),q.id+' summary remains coaching');
+  assert.ok(q.answerSections.every(s=>s.heading.length>3&&s.body.split(/\s+/).length>=25),q.id);
+  assert.ok(q.answerSections.reduce((n,s)=>n+s.body.split(/\s+/).length,0)>=110,q.id);
+  assert.deepEqual(q.detail,q.answerSections.map(s=>s.body),q.id);
+  assert.equal(q.editorialReview.service,'WriteHuman',q.id);
+  assert.equal(q.editorialReview.humanizerInputReviewed,true,q.id);
+ }
+});
+test('structured answers retain critical denominators, null results and prospective status',()=>{
+ const body=id=>data.questions.find(q=>q.id===id).detail.join(' ');
+ assert.match(body('llmpros-005'),/16 accepted solutions out of 166/);
+ assert.match(body('apros-016'),/167 ICPC/);
+ assert.match(body('apros-020'),/0\.063/);
+ assert.match(body('apros-020'),/0\.125/);
+ assert.match(body('xlagent-030'),/No measurable improvement/);
+ assert.match(body('xlagent-033'),/4\.0/);
+ assert.match(body('xlagent-033'),/2\.7/);
+ assert.match(body('xlagent-033'),/did not establish better repair correctness/);
+ assert.match(body('xlagent-051'),/not describe it as submitted or accepted/);
+ assert.match(body('phd-004'),/future experiment/);
+ for(const q of data.questions.filter(q=>q.project==='ask'))assert.equal(q.answerFormat,'professor-question-script');
+});

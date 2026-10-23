@@ -2,7 +2,8 @@
 
 Independent repository for Md Sifat Hossain's static interview preparation website. Source is `docs/`, published by GitHub Pages from `main:/docs`. No framework or third-party dependencies. Use `npm run dev`, `npm test`, `npm run build`.
 
-- Edit `docs/data/content.json` to expand the question bank. Preserve existing IDs; saved notes and deep links depend on them.
+- Edit `docs/data/content.json` to expand the question bank. Preserve existing IDs; saved notes and deep links depend on them. Every question needs a concise actual answer and three complete `answerSections` with headings and spoken prose. Do not replace an answer with instructions about what the user should say.
+- When using a language-rewriting service, preserve numerical claims, ownership and uncertainty against the source-based draft. Reject paraphrases that invent facts, drop content or change a null result.
 - Verify numerical and ownership claims against author sources. Distinguish findings, author records, concepts and proposed work. Each answer needs a source and locator.
 - XLAgent is in preparation; use the strict 21 October 2026 revision unless newer evidence is verified. Do not mix older broad-set counts into strict-set results.
 - Never equate two-sided edits with correctness or A-ProS gain ratios with final accuracy ratios.

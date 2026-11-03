@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 325" role="img" aria-labelledby="title desc">
+<title id="title">Existing Evident workflow and a proposed context-refinement boundary</title>
+<desc id="desc">An LLM constructs a harness from a warning and source. Failed validation returns diagnostics for existing repair. Accepted harnesses go to Eva. Only a justified no-error result filters the warning. A dashed, untested outer refinement recovers original caller context after a retained alarm.</desc>
+<defs><marker id="green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#6d8960"/></marker><marker id="orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#b67d46"/></marker></defs>
+<rect width="1080" height="325" rx="12" fill="#fbfcf7"/>
+<g font-family="system-ui,sans-serif" font-size="12" fill="#35523d" text-anchor="middle">
+<text x="33" y="30" text-anchor="start" font-size="10" letter-spacing="1">EXISTING CONSTRUCTION, VALIDATION AND ANALYSIS</text>
+<rect x="25" y="115" width="160" height="64" rx="8" fill="#edf2e5" stroke="#c1ceb2"/><text x="105" y="141">Warning + source</text><text x="105" y="161" font-size="10">original program fixed</text>
+<rect x="220" y="115" width="180" height="64" rx="8" fill="#edf2e5" stroke="#c1ceb2"/><text x="310" y="141">LLM builds context</text><text x="310" y="161" font-size="10">entry, objects, inputs</text>
+<rect x="435" y="115" width="160" height="64" rx="8" fill="#edf2e5" stroke="#c1ceb2"/><text x="515" y="141">Validate harness</text><text x="515" y="161" font-size="10">selected checks</text>
+<rect x="630" y="115" width="155" height="64" rx="8" fill="#edf2e5" stroke="#c1ceb2"/><text x="707" y="141">Eva analyzes H</text><text x="707" y="161" font-size="10">existing precision cascade</text>
+<rect x="825" y="102" width="225" height="90" rx="8" fill="#edf2e5" stroke="#c1ceb2"/><text x="937" y="128">not_a_bug: filter</text><text x="937" y="151">still_a_bug: keep</text><text x="937" y="174">unresolved: keep</text>
+<path d="M185 147H217M400 147H432M595 147H627M785 147H822" fill="none" stroke="#6d8960" stroke-width="1.4" marker-end="url(#green)"/>
+<path d="M515 114V67H310V112" fill="none" stroke="#6d8960" stroke-width="1.4" marker-end="url(#green)"/><text x="410" y="54" font-size="11">Existing validation-diagnostic repair</text>
+<path d="M707 180V239H310V181" fill="none" stroke="#b67d46" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#orange)"/>
+<text x="530" y="263" font-size="11" fill="#9a6a3b">PROPOSED: accepted-but-alarmed → source-grounded caller context</text>
+<text x="530" y="286" font-size="10" fill="#75826a">Untested outer loop; verify actual baseline behavior. Keep every feasible unsafe context.</text>
+<text x="35" y="311" text-anchor="start" font-size="10" fill="#75826a">A result about the generated harness needs a separate preservation argument before it justifies a claim about the original program.</text>
+</g></svg>

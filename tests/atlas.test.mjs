@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createIndex,search,parseQuery} from '../docs/search.js';
+import {contextCases,contextCase} from '../docs/study.js';
 const data=JSON.parse(await readFile(new URL('../docs/data/content.json',import.meta.url),'utf8'));
 const index=createIndex(data.questions,data.projects);
 const texts=(query,options)=>search(index,query,options).map(h=>h.question.question);
@@ -68,8 +69,8 @@ test('full corpus queries stay well below one second on this machine',()=>{
  console.log(`Search benchmark: six representative queries in ${duration.toFixed(1)} ms.`);
 });
 test('every question has a complete structured answer rather than coaching notes',()=>{
- assert.equal(data.questions.length,208);
- assert.equal(data.questions.reduce((n,q)=>n+q.answerSections.length,0),624);
+ assert.ok(data.questions.length>=208);
+ assert.equal(data.questions.reduce((n,q)=>n+q.answerSections.length,0),data.questions.length*3);
  const coaching=/^(?:A strong answer|A plausible answer|A defensible answer|Connect |Start |Establish |State |Use |Prepare |Identify |Name |Explain |Keep |Give |Personalize|Choose )/;
  for(const q of data.questions){
   assert.equal(q.answerSections.length,3,q.id);
@@ -77,8 +78,9 @@ test('every question has a complete structured answer rather than coaching notes
   assert.ok(q.answerSections.every(s=>s.heading.length>3&&s.body.split(/\s+/).length>=25),q.id);
   assert.ok(q.answerSections.reduce((n,s)=>n+s.body.split(/\s+/).length,0)>=110,q.id);
   assert.deepEqual(q.detail,q.answerSections.map(s=>s.body),q.id);
-  assert.equal(q.editorialReview.service,'WriteHuman',q.id);
-  assert.equal(q.editorialReview.humanizerInputReviewed,true,q.id);
+  assert.ok(['WriteHuman','Manual source review'].includes(q.editorialReview.service),q.id);
+  if(q.editorialReview.service==='WriteHuman')assert.equal(q.editorialReview.humanizerInputReviewed,true,q.id);
+  else assert.equal(q.editorialReview.sourceChecked,true,q.id);
  }
 });
 test('structured answers retain critical denominators, null results and prospective status',()=>{
@@ -91,7 +93,45 @@ test('structured answers retain critical denominators, null results and prospect
  assert.match(body('xlagent-033'),/4\.0/);
  assert.match(body('xlagent-033'),/2\.7/);
  assert.match(body('xlagent-033'),/did not establish better repair correctness/);
- assert.match(body('xlagent-051'),/not describe it as submitted or accepted/);
+ assert.match(body('xlagent-051'),/under review/);
+ assert.match(body('xlagent-051'),/not describe it as accepted or published/);
  assert.match(body('phd-004'),/future experiment/);
  for(const q of data.questions.filter(q=>q.project==='ask'))assert.equal(q.answerFormat,'professor-question-script');
+});
+test('existing study notes and links retain all original question IDs',async()=>{
+ const originals=JSON.parse(await readFile(new URL('./fixtures/original-question-ids.json',import.meta.url),'utf8'));
+ const current=new Set(data.questions.map(q=>q.id));
+ assert.equal(originals.length,208);
+ for(const id of originals)assert.ok(current.has(id),id);
+});
+test('the separate study pack resolves all selected answers and a 60-minute rehearsal',()=>{
+ const pack=data.studyPacks.find(p=>p.id==='evident');
+ assert.ok(pack);
+ assert.equal(pack.groups.reduce((n,g)=>n+g.minutes,0),60);
+ assert.equal(new Set(pack.questionIds).size,pack.questionIds.length);
+ for(const id of pack.questionIds)assert.ok(data.questions.some(q=>q.id===id),id);
+ assert.ok(pack.questionIds.includes('apros-036'));
+ assert.ok(pack.questionIds.includes('evident-005'));
+ assert.ok(pack.questionIds.includes('evident-022'));
+ assert.equal(data.questions.filter(q=>q.project==='evident').length,36);
+});
+test('title and formal-feedback queries retrieve complete relevant answers',()=>{
+ assert.ok(texts('APPROS reliable').includes('What exactly does reliable mean in A-ProS?'));
+ assert.ok(texts('towards autonomous').includes('What does the full A-ProS title mean?'));
+ assert.ok(texts('judge Eva').includes('How is online-judge feedback fundamentally different from an Eva result?'));
+ assert.ok(texts('caller guard').includes('Can I explain the eight-element-array caller example step by step?'));
+ assert.match(data.questions.find(q=>q.id==='apros-036').answer,/Towards Reliable Autonomous Programming Through Multi-Model Feedback/);
+});
+test('unsafe and incomplete caller contexts never receive the safe-case decision',()=>{
+ assert.equal(contextCase('checked').retain,false);
+ for(const id of ['unchecked','off-by-one','mixed','invented'])assert.equal(contextCase(id).retain,true,id);
+ assert.ok(contextCase('mixed').explanation.includes('unsafe caller'));
+ assert.ok(contextCase('invented').boundary.includes('source or threat-model justification'));
+ assert.equal(new Set(contextCases.map(c=>c.id)).size,5);
+});
+test('public content excludes correspondence and private meeting access',()=>{
+ const serialized=JSON.stringify(data);
+ for(const privateValue of ['hli333@ucr.edu','haonan.li@email.ucr.edu','ucr.zoom.us','9:30 AM Eastern','20:30','6:52 AM','4:04 AM'])assert.ok(!serialized.includes(privateValue),privateValue);
+ const xl=data.projects.find(p=>p.id==='xlagent');assert.equal(xl.status,'Under review');
+ assert.ok(!serialized.includes('MSR 2027'));
 });

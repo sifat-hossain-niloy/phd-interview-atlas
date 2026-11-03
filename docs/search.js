@@ -1,6 +1,6 @@
 // Small, dependency-free full-text index. No query or personal notes leave the browser.
 const GROUPS=[
- ['llmpros','llm-pros','llm pros','llm pros paper'],['apros','a-pros','a pros'],['xlagent','xl-agent','xl agent','excel agent','excel','polyglot'],
+ ['llmpros','llm-pros','llm pros','llm pros paper'],['apros','a-pros','a pros','appros'],['xlagent','xl-agent','xl agent','excel agent','excel','polyglot'],
  ['contribution','contributions','ownership','personally','responsibility'],['limitations','limitation','drawback','drawbacks','weakness'],
  ['funding','funded','financial','stipend','scholarship'],['phd','ph.d.','doctorate','doctoral'],
  ['calibration','calibrated','ece'],['memory','stateful','history','context'],['leakage','leak','contamination'],

@@ -13,3 +13,4 @@ Independent repository for Md Sifat Hossain's static interview preparation websi
 - Keep search and UI accessible and static; no external service is needed for searching or practice.
 - Run the meaningful search and data tests after changes. Use browser QA for changed interactions or layout. Bump the service-worker cache version for releases that change app resources.
 - Work on main and commit and push completed changes in the same session. Do not create a PR unless requested.
+- Chat-based interview answering lives in the private sibling folder `../interview-prep` (skills `interview-answer` and `interview-prepare`). When the user names an interview, use that skill, not this repository's files. Never copy its contents here: this repository is public.

@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "owner": "Md Sifat Hossain",
   "title": "Research Interview Atlas",
   "sources": [
@@ -12638,6 +12638,1476 @@
         "date": "2026-11-04"
       },
       "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-001",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "Can you tell me about your previous research?",
+      "answer": "My research asks what counts as reliable evidence that automated programming worked. I measured LLMs on hard contest problems in LLM-ProS, added judge feedback and critics in A-ProS, and moved to real repositories in XLAgent, where plausible results often turned out not to be evidence of correct behavior.",
+      "detail": [
+        "I started with LLM-ProS, at the LLM4Code workshop at ICSE 2025. I built the pipeline that tested five models on 166 ICPC World Finals problems using real judge verdicts. The best model, o1-mini, got 9.64 percent accepted on the first attempt, and three models got zero. So the next question was what feedback adds. In A-ProS, published in ACM TOSEM in 2026, one model writes code, a critic reads the judge failure, and the loop tries again. On 167 ICPC problems, GPT-5 workflows went from 39 accepted to between 85 and 90, and GPT-4 workflows went from 15 to between 31 and 38. I built the orchestration, submission, verdict capture and logging, and I ran the memory ablations and calibration analysis.",
+        "Contest problems are clean, and real software is not. So in XLAgent, which is under review, I studied bugs that need both sides of a language boundary. We confirmed 86 cross-language fixes, and 31 met our strict definition. I built a graph across the two languages, and it connected both sides for 11 of 12 fixes at the boundary kinds it models. But it did not improve localization, because a shell-only agent could search the shared name and found both sides in every run. On five executable bugs, XLAgent edited the developers' files on both sides more often, 4.0 of 5 against 2.7, but correctness did not improve. Before we isolated the environment, 13 of 16 baseline runs had read the developers' fix.",
+        "The thread across all three projects is that a result can look good and still not mean what it seems to mean. A plausible explanation, a two-sided patch or a high score is not the same as evidence. That is why Evident caught my attention. It takes the final decision away from the LLM, gives it to an analyzer, and keeps artifacts that can be checked. I come to this from agents and evaluation, not from formal methods, so program analysis is the part I most want to learn."
+      ],
+      "caution": "39 to 90 is out of 167 ICPC problems, not 367. XLAgent is under review, and its numbers are from the strict 21 October revision.",
+      "locator": "LLM-ProS Table II; A-ProS Table 6 and author contribution record; XLAgent strict revision RQ1 to RQ4",
+      "tags": [
+        "previous research",
+        "overview",
+        "research overview",
+        "two minutes",
+        "Haonan"
+      ],
+      "followups": [
+        "What did you personally build in A-ProS?",
+        "Why didn't the XLAgent graph improve localization?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "From measuring models to adding feedback",
+          "body": "I started with LLM-ProS, at the LLM4Code workshop at ICSE 2025. I built the pipeline that tested five models on 166 ICPC World Finals problems using real judge verdicts. The best model, o1-mini, got 9.64 percent accepted on the first attempt, and three models got zero. So the next question was what feedback adds. In A-ProS, published in ACM TOSEM in 2026, one model writes code, a critic reads the judge failure, and the loop tries again. On 167 ICPC problems, GPT-5 workflows went from 39 accepted to between 85 and 90, and GPT-4 workflows went from 15 to between 31 and 38. I built the orchestration, submission, verdict capture and logging, and I ran the memory ablations and calibration analysis."
+        },
+        {
+          "heading": "Moving to real software",
+          "body": "Contest problems are clean, and real software is not. So in XLAgent, which is under review, I studied bugs that need both sides of a language boundary. We confirmed 86 cross-language fixes, and 31 met our strict definition. I built a graph across the two languages, and it connected both sides for 11 of 12 fixes at the boundary kinds it models. But it did not improve localization, because a shell-only agent could search the shared name and found both sides in every run. On five executable bugs, XLAgent edited the developers' files on both sides more often, 4.0 of 5 against 2.7, but correctness did not improve. Before we isolated the environment, 13 of 16 baseline runs had read the developers' fix."
+        },
+        {
+          "heading": "What I took from it",
+          "body": "The thread across all three projects is that a result can look good and still not mean what it seems to mean. A plausible explanation, a two-sided patch or a high score is not the same as evidence. That is why Evident caught my attention. It takes the final decision away from the LLM, gives it to an analyzer, and keeps artifacts that can be checked. I come to this from agents and evaluation, not from formal methods, so program analysis is the part I most want to learn."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-002",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "Why are OJ feedback and Eva results fundamentally different?",
+      "answer": "An online judge runs the real candidate on concrete tests, so a failure is a real failing execution, while a pass is only evidence from a finite test set. Eva is the opposite. It over-approximates every execution of the harness, so no alarm rules the error out in that harness, but an alarm only means it could not be ruled out.",
+      "detail": [
+        "When a judge says wrong answer, something really failed, on a real input, in the real program. That verdict is strong. An accepted verdict is weaker, because it only covers the tests. Eva flips this. If Eva stays silent on an error in the harness, that error cannot happen in the harness, which is strong. If Eva alarms, it only says it could not prove safety, which is weak. In the GPT-5.5 run, 57 false alarms and all 40 confirmed bugs kept alarming, so the alarm alone does not separate them.",
+        "Two more differences matter. First, the object. The judge tests the artifact being repaired. Eva analyzes a harness, which is a stand-in the LLM built for a kernel program that we are not allowed to change, so a result has to transfer back to the original program. Second, the goal. On a judge, every solvable task should end in accepted, so pushing toward a pass matches the goal. In Evident an alarm can be the right final answer, because 40 confirmed bugs should keep alarming. There is also less to work with. A wrong answer can come with a failing input, while an alarm gives a location and abstract values, not a witness.",
+        "In A-ProS, chasing the pass signal was safe. If I copied that loop here and chased no alarm, the loop would be rewarded for hiding bugs. Table 6 shows that pressure. When the LLM chose the input values, Eva filtered the most false alarms, 116, but it also filtered 9 confirmed bugs. So an alarm cannot be a repair target. At most it can be a reason to go and look for real evidence in the original program. That is the main change in my thinking since I first compared the two."
+      ],
+      "caution": "Neither signal is perfect. A judge verdict still depends on a valid setup and tests, and Eva's guarantee is about the harness, not directly the original program.",
+      "locator": "Evident v2 §3, §4.3, §4.4, Tables 4 and 6; official Eva documentation; comparison with A-ProS is my reasoning",
+      "tags": [
+        "OJ",
+        "online judge",
+        "Eva",
+        "feedback",
+        "alarm",
+        "verdict",
+        "Haonan"
+      ],
+      "followups": [
+        "Does an Eva alarm mean there's a real bug?",
+        "If a harness passes validation but Eva still alarms, what feedback would help?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "Opposite strengths",
+          "body": "When a judge says wrong answer, something really failed, on a real input, in the real program. That verdict is strong. An accepted verdict is weaker, because it only covers the tests. Eva flips this. If Eva stays silent on an error in the harness, that error cannot happen in the harness, which is strong. If Eva alarms, it only says it could not prove safety, which is weak. In the GPT-5.5 run, 57 false alarms and all 40 confirmed bugs kept alarming, so the alarm alone does not separate them."
+        },
+        {
+          "heading": "Different object, different goal",
+          "body": "Two more differences matter. First, the object. The judge tests the artifact being repaired. Eva analyzes a harness, which is a stand-in the LLM built for a kernel program that we are not allowed to change, so a result has to transfer back to the original program. Second, the goal. On a judge, every solvable task should end in accepted, so pushing toward a pass matches the goal. In Evident an alarm can be the right final answer, because 40 confirmed bugs should keep alarming. There is also less to work with. A wrong answer can come with a failing input, while an alarm gives a location and abstract values, not a witness."
+        },
+        {
+          "heading": "Why this matters for my idea",
+          "body": "In A-ProS, chasing the pass signal was safe. If I copied that loop here and chased no alarm, the loop would be rewarded for hiding bugs. Table 6 shows that pressure. When the LLM chose the input values, Eva filtered the most false alarms, 116, but it also filtered 9 confirmed bugs. So an alarm cannot be a repair target. At most it can be a reason to go and look for real evidence in the original program. That is the main change in my thinking since I first compared the two."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-003",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "What are your thoughts on Evident?",
+      "answer": "I think the key idea is right: the LLM's job changes from judging a warning to writing down context as a program, and Eva makes the decision. With GPT-5.5 that filtered 102 of 160 false alarms and none of the 40 confirmed bugs. What I find most interesting is how much of the design is about limiting the LLM.",
+      "detail": [
+        "Filtering a warning claims that no execution can trigger it, and an LLM's explanation cannot establish that. Evident accepts this and gives the LLM a narrower job. It builds a warning-specific harness, numeric inputs keep their full type range through abstract_value, three checks test the harness, and Eva decides. What I like most is that assumptions become code. The harness, the validation results and Eva's output can all be inspected and rerun, while a no-bug explanation cannot.",
+        "Table 6 is the part I keep coming back to, because it removes one restriction at a time. With LLM-chosen inputs, Eva filtered 116 false alarms and 9 confirmed bugs. With abstract inputs and no validation, it was 99 and 1. Full Evident was 102 and 0, so validation helped safety and also helped utility a little. The surprise for me was variant C, where the LLM sees Eva's output and makes the final decision. I expected extra judgment to at least filter more. It filtered fewer, 98, and also 4 confirmed bugs. That matches what I saw in my own work: a persuasive explanation is weak evidence.",
+        "I think the hard part is that the LLM's output is the program being analyzed. Eva cannot tell whether the harness kept the bug, so validation targets known ways of losing it, and the paper says clearly that the checks do not prove preservation. I would like to hear how you think about that gap, for example when a function has other callers. I also found the failure analysis useful to read. The two largest causes are incomplete function models and limited precision, not careless LLM mistakes. That is why my own idea became so much narrower."
+      ],
+      "caution": "These are opinions from reading the published v2 paper. I have not run Evident.",
+      "locator": "Evident v2 Abstract, §3, §4.3, §6.2.3, §6.4 Table 6, §7; opinions are my reading",
+      "tags": [
+        "thoughts",
+        "opinion",
+        "Evident",
+        "Table 6",
+        "critique",
+        "Haonan"
+      ],
+      "followups": [
+        "What are the limitations of Evident?",
+        "What exactly is different in your approach from our existing repair loop?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "What I think it gets right",
+          "body": "Filtering a warning claims that no execution can trigger it, and an LLM's explanation cannot establish that. Evident accepts this and gives the LLM a narrower job. It builds a warning-specific harness, numeric inputs keep their full type range through abstract_value, three checks test the harness, and Eva decides. What I like most is that assumptions become code. The harness, the validation results and Eva's output can all be inspected and rerun, while a no-bug explanation cannot."
+        },
+        {
+          "heading": "The result that stayed with me",
+          "body": "Table 6 is the part I keep coming back to, because it removes one restriction at a time. With LLM-chosen inputs, Eva filtered 116 false alarms and 9 confirmed bugs. With abstract inputs and no validation, it was 99 and 1. Full Evident was 102 and 0, so validation helped safety and also helped utility a little. The surprise for me was variant C, where the LLM sees Eva's output and makes the final decision. I expected extra judgment to at least filter more. It filtered fewer, 98, and also 4 confirmed bugs. That matches what I saw in my own work: a persuasive explanation is weak evidence."
+        },
+        {
+          "heading": "What I would like to understand better",
+          "body": "I think the hard part is that the LLM's output is the program being analyzed. Eva cannot tell whether the harness kept the bug, so validation targets known ways of losing it, and the paper says clearly that the checks do not prove preservation. I would like to hear how you think about that gap, for example when a function has other callers. I also found the failure analysis useful to read. The two largest causes are incomplete function models and limited precision, not careless LLM mistakes. That is why my own idea became so much narrower."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-004",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "What exactly is different in your approach from our existing repair loop?",
+      "answer": "Your repair loop handles compile and validation failures. Once a harness passes validation, Algorithm 1 analyzes it and returns, so an accepted harness that still alarms ends as still_a_bug with no second attempt. My idea touches only that exit: if the alarm may come from a lost caller guard, try an earlier original entry. It is a proposal, not something I have built.",
+      "detail": [
+        "In Algorithm 1, a failed validation sends diagnostics back and the loop continues. Once validation passes, the pipeline calls AnalyzeAcceptedHarness and returns. So the feedback loop covers harness construction. An accepted harness that completes analysis but still has the alarm leaves as still_a_bug. I do not see a retry at that point in the published workflow.",
+        "My idea sits only at that exit. If the harness entered below a function that may hold a real check on the value, look at the original caller and try that caller as the entry. Everything else stays the same: the original code, the abstract_value rule, the three checks, the analysis cascade, and Eva as the decider. The LLM does not get to add a guard. It can only choose to start earlier in code that already exists.",
+        "I am not proposing a new repair loop, and I am not saying memory is the contribution. I am also reading the published workflow, not your implementation. If you already retry entries after an alarm, then this adds nothing and I would drop it. That is one of the first things I want to ask you. And I have not shown that it helps. It is a hypothesis with a small upper bound."
+      ],
+      "caution": "Proposed and not implemented. Compare with the real implementation before claiming that anything is missing.",
+      "locator": "Evident v2 Algorithm 1, §3 Outcomes, §4.2 Repair loop; the proposal is mine and is not implemented",
+      "tags": [
+        "repair loop",
+        "difference",
+        "Algorithm 1",
+        "accepted harness",
+        "proposal",
+        "caller context",
+        "Haonan"
+      ],
+      "followups": [
+        "The LLM already chooses the entry from the call witness, so what's new?",
+        "Which failure categories would you address, and how many cases is that?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "Where the existing loop stops",
+          "body": "In Algorithm 1, a failed validation sends diagnostics back and the loop continues. Once validation passes, the pipeline calls AnalyzeAcceptedHarness and returns. So the feedback loop covers harness construction. An accepted harness that completes analysis but still has the alarm leaves as still_a_bug. I do not see a retry at that point in the published workflow."
+        },
+        {
+          "heading": "The one thing I would add",
+          "body": "My idea sits only at that exit. If the harness entered below a function that may hold a real check on the value, look at the original caller and try that caller as the entry. Everything else stays the same: the original code, the abstract_value rule, the three checks, the analysis cascade, and Eva as the decider. The LLM does not get to add a guard. It can only choose to start earlier in code that already exists."
+        },
+        {
+          "heading": "What I am not claiming",
+          "body": "I am not proposing a new repair loop, and I am not saying memory is the contribution. I am also reading the published workflow, not your implementation. If you already retry entries after an alarm, then this adds nothing and I would drop it. That is one of the first things I want to ask you. And I have not shown that it helps. It is a hypothesis with a small upper bound."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-005",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "Which failure categories would you address, and how many cases is that?",
+      "answer": "Only missing caller-side constraints, which is 9 false alarms in the GPT-5.5 failure analysis of 58 cases. The causes overlap, so 9 is a ceiling, not an estimate. If all 9 were filtered and nothing else changed, 102 would become 111 of 160, or 69.4 percent.",
+      "detail": [
+        "Section 6.2.3 examines the 57 false alarms that were kept and the one that was unresolved. Missing caller-side constraints are 9 of those false alarms. The paper's example is exactly the pattern I care about: calling a helper directly can bypass a bounds check in its caller, so the analysis admits inputs that the original callers would reject.",
+        "The paper says the causes are not mutually exclusive, so one warning can need a caller guard and also a function model. Filtering it would need both. In the best case, 102 becomes 111 of 160, which is 69.4 percent. That is arithmetic on your counts, not a result, and I expect less. A higher entry can also time out or need more state than the LLM can build.",
+        "I do not target incomplete function models, at 21 cases, or limited precision, at 22 cases, even though they are bigger. A different entry cannot create a missing model, and if the check is already in the analyzed code, then the problem is precision. Inaccurate object construction, 4 cases, is a different problem, and the unresolved case is a mapping problem between LLVM IR and Frama-C's AST. If you told me precision is the better target, I would take that seriously. I chose caller context because the missing fact already exists in the original code."
+      ],
+      "caution": "Causes overlap, so do not add them. The 111 here is arithmetic on v2 counts and is unrelated to any count in the earlier v1 evaluation. Never mix the v1 and v2 categories.",
+      "locator": "Evident v2 §6.2.3, Table 4; the ceiling is my arithmetic",
+      "tags": [
+        "failure categories",
+        "caller-side constraints",
+        "9 cases",
+        "ceiling",
+        "residual",
+        "false alarms",
+        "Haonan"
+      ],
+      "followups": [
+        "How would you evaluate this, and what would the baseline be?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The target",
+          "body": "Section 6.2.3 examines the 57 false alarms that were kept and the one that was unresolved. Missing caller-side constraints are 9 of those false alarms. The paper's example is exactly the pattern I care about: calling a helper directly can bypass a bounds check in its caller, so the analysis admits inputs that the original callers would reject."
+        },
+        {
+          "heading": "Why 9 is a ceiling",
+          "body": "The paper says the causes are not mutually exclusive, so one warning can need a caller guard and also a function model. Filtering it would need both. In the best case, 102 becomes 111 of 160, which is 69.4 percent. That is arithmetic on your counts, not a result, and I expect less. A higher entry can also time out or need more state than the LLM can build."
+        },
+        {
+          "heading": "What I do not target",
+          "body": "I do not target incomplete function models, at 21 cases, or limited precision, at 22 cases, even though they are bigger. A different entry cannot create a missing model, and if the check is already in the analyzed code, then the problem is precision. Inaccurate object construction, 4 cases, is a different problem, and the unresolved case is a mapping problem between LLVM IR and Frama-C's AST. If you told me precision is the better target, I would take that seriously. I chose caller context because the missing fact already exists in the original code."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-006",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "If a harness passes validation but Eva still alarms, what feedback would help?",
+      "answer": "Not the alarm alone, because that invites the LLM to make it disappear. I would give the entry that was tried, the alarm's location and abstract values, and the original caller code, then ask one narrow question: does a real check in a caller exclude these values? If yes, try that entry. If no, stop and keep the warning.",
+      "detail": [
+        "Four things. The entry that was tried. The alarm location with Eva's abstract values at the sink. The list of entries already tried, so the next attempt does not repeat itself. And the original source of the callers, which the LLM can already look up with get_definition. The values are useful because they turn the alarm into a precise question. If the alarm needs an index of 8 or more, the thing to look for is a real check in a caller that excludes those values.",
+        "The output is deliberately narrow. Either it points to an original caller whose code may exclude those values, or it says it found none. It cannot write a new condition, and it cannot change the range of an input. The next harness then goes through the same validation, and Eva decides again. So the LLM only suggests where to look. Whether the guard really works is decided by the analysis.",
+        "Not every remaining warning is an LLM mistake. An alarm at the sink can be a real bug, a missing function model or imprecision, and the loop must not assume which. If no real check exists, or the next entry still alarms, the warning stays as still_a_bug. In this design that is a correct ending, not a failure of the loop. That is the main difference from a repair loop that keeps trying until it passes."
+      ],
+      "caution": "The feedback design is a proposal and has not been tested. Whether these values can be extracted cleanly depends on the implementation.",
+      "locator": "Evident v2 §4.2 Code navigation, §4.4, §6.2.3; official Eva Results API; the design is my proposal",
+      "tags": [
+        "feedback",
+        "accepted harness",
+        "still alarms",
+        "next attempt",
+        "abstract values",
+        "Haonan"
+      ],
+      "followups": [
+        "How would you make sure you don't hide real bugs?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "What goes in",
+          "body": "Four things. The entry that was tried. The alarm location with Eva's abstract values at the sink. The list of entries already tried, so the next attempt does not repeat itself. And the original source of the callers, which the LLM can already look up with get_definition. The values are useful because they turn the alarm into a precise question. If the alarm needs an index of 8 or more, the thing to look for is a real check in a caller that excludes those values."
+        },
+        {
+          "heading": "What the LLM may do with it",
+          "body": "The output is deliberately narrow. Either it points to an original caller whose code may exclude those values, or it says it found none. It cannot write a new condition, and it cannot change the range of an input. The next harness then goes through the same validation, and Eva decides again. So the LLM only suggests where to look. Whether the guard really works is decided by the analysis."
+        },
+        {
+          "heading": "Stopping is a correct outcome",
+          "body": "Not every remaining warning is an LLM mistake. An alarm at the sink can be a real bug, a missing function model or imprecision, and the loop must not assume which. If no real check exists, or the next entry still alarms, the warning stays as still_a_bug. In this design that is a correct ending, not a failure of the loop. That is the main difference from a repair loop that keeps trying until it passes."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-007",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "How would you make sure you don't hide real bugs?",
+      "answer": "The rule is the transfer obligation: if an error is reachable in the original program, it must stay reachable in the harness, or a clean result proves nothing. So I change only the entry, the guard must be unchanged original code, every feasible caller stays represented, and if I cannot show that, the warning stays.",
+      "detail": [
+        "A not_a_bug result is only about the harness. It transfers to the original program only if the executions that reach the error are also in the harness. Moving an entry upward is the risky direction. Section 4.1 says entering low can keep a false alarm but cannot hide a bug, because skipped checks only admit extra inputs. Entering higher means you only cover executions through that caller, so this is where I would be most careful.",
+        "Four rules. The entry must be real code, and the harness still goes through all three checks. No guard is written in the harness. The input stays full range at the entry. And before filtering, I need the list of feasible callers of the function that holds the guard, including function-pointer callbacks. If any caller is unguarded, or the list may be incomplete, the warning stays. A kept false alarm costs some inspection time. A hidden bug costs much more.",
+        "I would test this directly. All 40 confirmed bugs are a regression set, and one filtered bug counts as a failure of the method. I would also add negative controls that must still alarm: an unguarded caller, an off-by-one guard i <= 8, a mix of guarded and unguarded callers, and a guard invented in the harness. Filtered false alarms and filtered bugs are reported separately, and every newly filtered case is audited by hand. Zero filtered bugs on a finite set would still be evidence, not a proof."
+      ],
+      "caution": "These controls are proposed and have not been run. Zero filtered bugs in a finite set does not establish safety in general.",
+      "locator": "Evident v2 §2.3, §3, §4.1, §4.3, §6.2.1; the controls are my proposal",
+      "tags": [
+        "hide real bugs",
+        "safety",
+        "false negative",
+        "transfer",
+        "negative control",
+        "Haonan"
+      ],
+      "followups": [
+        "What if another caller doesn't have the guard?",
+        "Doesn't adding a caller's guard narrow the inputs?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The safety rule",
+          "body": "A not_a_bug result is only about the harness. It transfers to the original program only if the executions that reach the error are also in the harness. Moving an entry upward is the risky direction. Section 4.1 says entering low can keep a false alarm but cannot hide a bug, because skipped checks only admit extra inputs. Entering higher means you only cover executions through that caller, so this is where I would be most careful."
+        },
+        {
+          "heading": "The design constraints",
+          "body": "Four rules. The entry must be real code, and the harness still goes through all three checks. No guard is written in the harness. The input stays full range at the entry. And before filtering, I need the list of feasible callers of the function that holds the guard, including function-pointer callbacks. If any caller is unguarded, or the list may be incomplete, the warning stays. A kept false alarm costs some inspection time. A hidden bug costs much more."
+        },
+        {
+          "heading": "The controls",
+          "body": "I would test this directly. All 40 confirmed bugs are a regression set, and one filtered bug counts as a failure of the method. I would also add negative controls that must still alarm: an unguarded caller, an off-by-one guard i <= 8, a mix of guarded and unguarded callers, and a guard invented in the harness. Filtered false alarms and filtered bugs are reported separately, and every newly filtered case is audited by hand. Zero filtered bugs on a finite set would still be evidence, not a proof."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-008",
+      "project": "haonan",
+      "topic": "Almost certain",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "Can you walk me through a concrete example?",
+      "answer": "helper(i) writes slots[i] in an 8-element array, and its only caller checks i < 8. A harness that enters at helper has i at full range, so Eva must alarm, and that is a false alarm. A harness that enters at the caller keeps i at full range, the real guard runs, and the alarm can go away. If another caller has no guard, the warning stays.",
+      "detail": [
+        "Say helper takes an unsigned i and writes slots[i], where slots has 8 elements. Its only caller says: if i is less than 8, call helper. If the harness enters directly at helper, abstract_value gives i its full unsigned range, so Eva has to alarm at the write. That is a false alarm, because the original program never passes 8. This is the missing caller constraint pattern in the paper. Now enter at the caller instead. i is still full range at the entry, so the input range check passes. Then the real guard runs inside the original code, so inside helper i is between 0 and 7, and Eva can prove the write is safe.",
+        "These matter more than the good case. If a caller has no guard, 8 reaches the write and the warning must stay. If the guard is i <= 8, then 8 reaches the write too, so seeing a guard is not enough. The exact condition matters. If one caller is guarded and another is not, analyzing only the guarded one proves something true about a harness that lost the bad path, so that must not filter the warning. And if the LLM writes the check i < 8 in the harness itself, that is an invented assumption, and the entry check should reject it.",
+        "I ran a small synthetic C version natively with AddressSanitizer. The guarded caller finished cleanly at 0, 7, 8 and the largest unsigned value. The unguarded and off-by-one callers reported a global buffer overflow at index 8. That only checks the toy. It says nothing about kernels or about Eva, and I have not run this example in Eva. It shows the reasoning and the controls, nothing more."
+      ],
+      "caution": "Synthetic example. It is not an Eva or Evident run and does not come from a kernel benchmark. The interactive caller exercise on this page uses the same logic.",
+      "locator": "Evident v2 §4.3.1, §6.2.3; author-owned synthetic C example; no Eva or Evident run",
+      "tags": [
+        "example",
+        "helper",
+        "caller guard",
+        "i < 8",
+        "eight-element array",
+        "off by one",
+        "synthetic",
+        "Haonan"
+      ],
+      "followups": [
+        "What if another caller doesn't have the guard?",
+        "Have you actually run Frama-C, Eva or Evident?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The good case",
+          "body": "Say helper takes an unsigned i and writes slots[i], where slots has 8 elements. Its only caller says: if i is less than 8, call helper. If the harness enters directly at helper, abstract_value gives i its full unsigned range, so Eva has to alarm at the write. That is a false alarm, because the original program never passes 8. This is the missing caller constraint pattern in the paper. Now enter at the caller instead. i is still full range at the entry, so the input range check passes. Then the real guard runs inside the original code, so inside helper i is between 0 and 7, and Eva can prove the write is safe."
+        },
+        {
+          "heading": "The cases that must still alarm",
+          "body": "These matter more than the good case. If a caller has no guard, 8 reaches the write and the warning must stay. If the guard is i <= 8, then 8 reaches the write too, so seeing a guard is not enough. The exact condition matters. If one caller is guarded and another is not, analyzing only the guarded one proves something true about a harness that lost the bad path, so that must not filter the warning. And if the LLM writes the check i < 8 in the harness itself, that is an invented assumption, and the entry check should reject it."
+        },
+        {
+          "heading": "What I have actually checked",
+          "body": "I ran a small synthetic C version natively with AddressSanitizer. The guarded caller finished cleanly at 0, 7, 8 and the largest unsigned value. The unguarded and off-by-one callers reported a global buffer overflow at index 8. That only checks the toy. It says nothing about kernels or about Eva, and I have not run this example in Eva. It shows the reasoning and the controls, nothing more."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-009",
+      "project": "haonan",
+      "topic": "Very likely follow-ups on your idea",
+      "difficulty": "Challenge",
+      "source": "evident-analysis",
+      "question": "The LLM already chooses the entry from the call witness, so what's new?",
+      "answer": "You are right, the LLM already picks from suffixes of the call witness, so the first attempt could enter at the caller. What would be new is only the trigger: using an accepted-but-alarmed result as a reason to look again. Whether that adds anything depends on data I do not have, such as where those 9 cases actually entered.",
+      "detail": [
+        "Section 4.1 derives the entry candidates from the call witness, and the LLM chooses one. So a different entry is not a new capability, and I would not claim that it is. What the published pipeline does not do is come back after an accepted harness alarms and consider a different entry. That is the only gap I am pointing at.",
+        "There is a plausible reason the LLM might enter low. The paper describes the trade-off: starting near the source means building more kernel state, and starting near the sink avoids much of that framework code. So a low entry may be the easier way to get an accepted harness. That is only my guess until someone looks at those 9 cases.",
+        "I see three outcomes, and each one changes my view. If those cases already entered above the guard, the idea is dead. If a higher entry timed out or could not be built, the problem is cost or construction, not feedback. If the guard sits on a path that is not in the call witness, suffixes cannot reach it, so I would need another source of callers. Only a low entry with the guard on the witness gives this idea a real target. A simple test is an equal-budget arm that tries other entries with no alarm guidance. If it matches the guided version, alarm feedback adds nothing."
+      ],
+      "caution": "The reason for a low entry is a hypothesis. I have not seen which entries were used in those cases.",
+      "locator": "Evident v2 §4.1, §4.2, §6.2.3; my reasoning",
+      "tags": [
+        "entry",
+        "call witness",
+        "suffix",
+        "what is new",
+        "entry candidates",
+        "Haonan"
+      ],
+      "followups": [
+        "How would you evaluate this, and what would the baseline be?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "What already exists",
+          "body": "Section 4.1 derives the entry candidates from the call witness, and the LLM chooses one. So a different entry is not a new capability, and I would not claim that it is. What the published pipeline does not do is come back after an accepted harness alarms and consider a different entry. That is the only gap I am pointing at."
+        },
+        {
+          "heading": "Why the first choice may be low",
+          "body": "There is a plausible reason the LLM might enter low. The paper describes the trade-off: starting near the source means building more kernel state, and starting near the sink avoids much of that framework code. So a low entry may be the easier way to get an accepted harness. That is only my guess until someone looks at those 9 cases."
+        },
+        {
+          "heading": "What the data would decide",
+          "body": "I see three outcomes, and each one changes my view. If those cases already entered above the guard, the idea is dead. If a higher entry timed out or could not be built, the problem is cost or construction, not feedback. If the guard sits on a path that is not in the call witness, suffixes cannot reach it, so I would need another source of callers. Only a low entry with the guard on the witness gives this idea a real target. A simple test is an equal-budget arm that tries other entries with no alarm guidance. If it matches the guided version, alarm feedback adds nothing."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-010",
+      "project": "haonan",
+      "topic": "Very likely follow-ups on your idea",
+      "difficulty": "Challenge",
+      "source": "evident-analysis",
+      "question": "What if another caller doesn't have the guard?",
+      "answer": "Then the warning stays. A clean result from the guarded caller says nothing about the unguarded one. If that second caller is feasible, the error may be reachable, so filtering would hide a possible bug. The harness must cover that caller, or the decision stays conservative.",
+      "detail": [
+        "Say safe(i) checks i < 8 and then calls helper, and unsafe(i) calls helper directly. At index 8, the first one returns and the second one writes past the end. If I enter only at safe, Eva can honestly prove that harness clean, and it is still the wrong conclusion about the program. That is exactly the failure I need to avoid.",
+        "Entering low can keep a false alarm but cannot hide a bug. Entering higher flips that direction, because the analysis then covers only executions through that one caller. The entry candidates are suffixes of one reported call path, so other callers are not in the set by construction. I would have to list callers separately, including function-pointer callbacks, and treat an incomplete list as a reason to keep the warning.",
+        "The idea may only filter a warning if every feasible caller is accounted for. Otherwise it stops. That makes the idea weaker, and that is fine, because I would rather filter fewer warnings. I would also like to ask how you think about this today, since any entry above the sink faces the same question, and section 4.3 says validation does not establish full preservation. I am asking that as a real question. I am not saying Evident is wrong."
+      ],
+      "caution": "Finding all feasible callers is hard in kernel code. Incomplete caller information must keep the warning, not filter it.",
+      "locator": "Evident v2 §3, §4.1, §4.3; synthetic caller example; my reasoning",
+      "tags": [
+        "other caller",
+        "second caller",
+        "unguarded",
+        "mixed callers",
+        "preservation",
+        "function pointer",
+        "Haonan"
+      ],
+      "followups": [
+        "How would you make sure you don't hide real bugs?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "Why one clean caller is not enough",
+          "body": "Say safe(i) checks i < 8 and then calls helper, and unsafe(i) calls helper directly. At index 8, the first one returns and the second one writes past the end. If I enter only at safe, Eva can honestly prove that harness clean, and it is still the wrong conclusion about the program. That is exactly the failure I need to avoid."
+        },
+        {
+          "heading": "Why this is the real risk of moving up",
+          "body": "Entering low can keep a false alarm but cannot hide a bug. Entering higher flips that direction, because the analysis then covers only executions through that one caller. The entry candidates are suffixes of one reported call path, so other callers are not in the set by construction. I would have to list callers separately, including function-pointer callbacks, and treat an incomplete list as a reason to keep the warning."
+        },
+        {
+          "heading": "How I would handle it",
+          "body": "The idea may only filter a warning if every feasible caller is accounted for. Otherwise it stops. That makes the idea weaker, and that is fine, because I would rather filter fewer warnings. I would also like to ask how you think about this today, since any entry above the sink faces the same question, and section 4.3 says validation does not establish full preservation. I am asking that as a real question. I am not saying Evident is wrong."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-011",
+      "project": "haonan",
+      "topic": "Very likely follow-ups on your idea",
+      "difficulty": "Challenge",
+      "source": "evident-analysis",
+      "question": "Doesn't adding a caller's guard narrow the inputs?",
+      "answer": "The difference is where the constraint lives. The input is still full range at the entry. The guard then runs inside the original program, after the point where the entry check looks, and section 4.3.1 says constraints inside the original program are not harness restrictions. The same condition copied into generated setup code would be a restriction, and the entry check should catch it.",
+      "detail": [
+        "The entry check compares a value right after initialization, point A, with the same value right before execution enters the selected entry, point B. If values are lost between A and B, generated setup code narrowed the input. If I enter at the caller, nothing is lost between A and B, because i is full range at both. The guard comes after B, so it is program behavior. Section 4.2 says kernel execution may constrain these values through guards.",
+        "Compare this with the paper's example, where the LLM writes a bounds check on the control index before calling the driver entry. It looks almost the same as a real guard, and it is exactly what the entry check must catch, because it runs before the original program is entered. So the text of the condition does not matter. What matters is whether it is generated code or original code.",
+        "It must be the unchanged code from the translation unit, not a reconstruction. A guard from another kernel version, or a paraphrase of it, does not count. And I want to be fair here: this is safe for input ranges, but a higher entry can still drop other callers. So the real safety condition is the caller question, not the input range check."
+      ],
+      "caution": "Passing the entry check does not prove preservation. It covers narrowing of relevant numeric inputs, not relational constraints or dropped callers.",
+      "locator": "Evident v2 §4.2, §4.3.1 Entry check and Scope",
+      "tags": [
+        "narrow",
+        "full range",
+        "entry check",
+        "point A",
+        "point B",
+        "guard",
+        "Haonan"
+      ],
+      "followups": [
+        "What do the three validation checks do?",
+        "What if another caller doesn't have the guard?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "Point A and point B",
+          "body": "The entry check compares a value right after initialization, point A, with the same value right before execution enters the selected entry, point B. If values are lost between A and B, generated setup code narrowed the input. If I enter at the caller, nothing is lost between A and B, because i is full range at both. The guard comes after B, so it is program behavior. Section 4.2 says kernel execution may constrain these values through guards."
+        },
+        {
+          "heading": "The same check in a different place",
+          "body": "Compare this with the paper's example, where the LLM writes a bounds check on the control index before calling the driver entry. It looks almost the same as a real guard, and it is exactly what the entry check must catch, because it runs before the original program is entered. So the text of the condition does not matter. What matters is whether it is generated code or original code."
+        },
+        {
+          "heading": "What must be true of the guard",
+          "body": "It must be the unchanged code from the translation unit, not a reconstruction. A guard from another kernel version, or a paraphrase of it, does not count. And I want to be fair here: this is safe for input ranges, but a higher entry can still drop other callers. So the real safety condition is the caller question, not the input range check."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-012",
+      "project": "haonan",
+      "topic": "Very likely follow-ups on your idea",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "Does an Eva alarm mean there's a real bug?",
+      "answer": "No. An alarm means Eva could not prove the operation safe in the analyzed program. It may be a real bug, over-approximation, a missing caller guard or a stub that lost a constraint. In the GPT-5.5 run, 97 warnings were kept after analysis, and only 40 of them were confirmed bugs.",
+      "detail": [
+        "Eva over-approximates the possible values, so the set it reasons about can include states that no real execution reaches. An alarm says a bad value is in that set. That is why the paper is careful about the outcome still_a_bug. It does not assert a confirmed bug. It means the completed analysis could not rule out the error.",
+        "With GPT-5.5, 57 false alarms and 40 confirmed bugs were kept after completed analyses. Both groups alarm. So on this set an alarm was right 40 times out of 97, and the alarm alone cannot tell the two groups apart. The ground truth comes from earlier papers plus manual validation, not from Eva.",
+        "Eva does separate statuses. Most alarms are Unknown, which means possible. A definite one is Invalid, which means the analysis is certain about the analyzed code. That is the closest thing to a judge failure, but it is still about the harness, and it can come from a wrong model or specification. An alarm can also be an artifact of the harness itself, like a table built without its terminating entry. So an alarm is a reason to look, not a conclusion."
+      ],
+      "caution": "40 of 97 is my arithmetic for this one dataset. It is not a general precision figure for Eva.",
+      "locator": "Evident v2 §3, §4.4, §6.1, Table 4, §6.2.3; official Eva documentation; 40 of 97 is my arithmetic",
+      "tags": [
+        "Eva alarm",
+        "real bug",
+        "false alarm",
+        "still_a_bug",
+        "Unknown",
+        "Invalid",
+        "Haonan"
+      ],
+      "followups": [
+        "Why are OJ feedback and Eva results fundamentally different?",
+        "Does zero false negatives mean Evident is sound?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "What an alarm says",
+          "body": "Eva over-approximates the possible values, so the set it reasons about can include states that no real execution reaches. An alarm says a bad value is in that set. That is why the paper is careful about the outcome still_a_bug. It does not assert a confirmed bug. It means the completed analysis could not rule out the error."
+        },
+        {
+          "heading": "The numbers",
+          "body": "With GPT-5.5, 57 false alarms and 40 confirmed bugs were kept after completed analyses. Both groups alarm. So on this set an alarm was right 40 times out of 97, and the alarm alone cannot tell the two groups apart. The ground truth comes from earlier papers plus manual validation, not from Eva."
+        },
+        {
+          "heading": "Status and direction",
+          "body": "Eva does separate statuses. Most alarms are Unknown, which means possible. A definite one is Invalid, which means the analysis is certain about the analyzed code. That is the closest thing to a judge failure, but it is still about the harness, and it can come from a wrong model or specification. An alarm can also be an artifact of the harness itself, like a table built without its terminating entry. So an alarm is a reason to look, not a conclusion."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-013",
+      "project": "haonan",
+      "topic": "Very likely follow-ups on your idea",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "How would you evaluate this, and what would the baseline be?",
+      "answer": "The baseline is Evident itself on the same warnings. First I would reproduce the published result and label residual cases by cause before any change. Then I would compare three arms under the same LLM, token and Eva budget: existing Evident, equal-budget entry exploration with no alarm guidance, and alarm-guided caller recovery.",
+      "detail": [
+        "The first arm is Evident as it is. The second tries other entries under the same budget but gets no alarm guidance. The third uses the alarm to look for a caller guard. The middle arm matters most. If blind exploration matches the guided version, then alarm feedback adds nothing, and that alone answers the question. I would fix the labels on which cases are eligible before running anything, so I am not picking successes afterward. I would use three runs per warning and the majority outcome, like the paper.",
+        "False alarms filtered, confirmed bugs filtered, unresolved cases, cost and runtime, all separately. More filtering alone is not an improvement, because a modified harness may exclude the executions that trigger a real bug. All 40 confirmed bugs stay as a regression set, and the negative controls must still alarm. A higher entry can time out, so unresolved cases count as a cost of the method. Since the checks were developed on the same 200 warnings, I would also like some warnings that were not used in development.",
+        "No gain over the blind arm, any filtered confirmed bug, or the 9 cases turning out not to be recoverable. Any one of those means I change or drop the idea. With a ceiling of 9 cases, statistics will be weak, so I would report case by case instead of a headline percentage. A clean null result would still be useful. I learned that in XLAgent, where the honest result was that the graph did not help."
+      ],
+      "caution": "This is a plan. None of it has been run. Budgets must be matched explicitly, and reports must keep filtered false alarms and filtered bugs separate.",
+      "locator": "Evident v2 §5 Development of the Checks, §6.1, §6.2.3; the plan is mine and has not been run",
+      "tags": [
+        "evaluation",
+        "baseline",
+        "experiment design",
+        "three arms",
+        "control",
+        "budget",
+        "Haonan"
+      ],
+      "followups": [
+        "How would you make sure you don't hide real bugs?",
+        "Have you actually run Frama-C, Eva or Evident?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The three arms",
+          "body": "The first arm is Evident as it is. The second tries other entries under the same budget but gets no alarm guidance. The third uses the alarm to look for a caller guard. The middle arm matters most. If blind exploration matches the guided version, then alarm feedback adds nothing, and that alone answers the question. I would fix the labels on which cases are eligible before running anything, so I am not picking successes afterward. I would use three runs per warning and the majority outcome, like the paper."
+        },
+        {
+          "heading": "What I would report",
+          "body": "False alarms filtered, confirmed bugs filtered, unresolved cases, cost and runtime, all separately. More filtering alone is not an improvement, because a modified harness may exclude the executions that trigger a real bug. All 40 confirmed bugs stay as a regression set, and the negative controls must still alarm. A higher entry can time out, so unresolved cases count as a cost of the method. Since the checks were developed on the same 200 warnings, I would also like some warnings that were not used in development."
+        },
+        {
+          "heading": "What would kill the idea",
+          "body": "No gain over the blind arm, any filtered confirmed bug, or the 9 cases turning out not to be recoverable. Any one of those means I change or drop the idea. With a ceiling of 9 cases, statistics will be weak, so I would report case by case instead of a headline percentage. A clean null result would still be useful. I learned that in XLAgent, where the honest result was that the graph did not help."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-014",
+      "project": "haonan",
+      "topic": "Very likely follow-ups on your idea",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "Have you actually run Frama-C, Eva or Evident?",
+      "answer": "No. I have not run Frama-C, Eva or Evident, and I have not implemented this idea. I read both versions of the paper and the Eva documentation, and I ran a small synthetic C example with AddressSanitizer. What I am offering today is reasoning and an experiment plan, not a result.",
+      "detail": [
+        "I read the revised paper closely, and the earlier version. I read the official Eva documentation, mainly to understand what an alarm means. I wrote a small C example with a guarded caller, an unguarded caller and an off-by-one caller, and ran it natively with AddressSanitizer. That is everything, and I do not want to make it sound like more.",
+        "Those runs are concrete executions on selected inputs, which is the judge side of the comparison, not the Eva side. They can show that a bad case really overflows. They cannot show that the guarded case is safe for every input, and they say nothing about how Eva behaves. So I treat them as a sanity check of my example and nothing else.",
+        "I would install Frama-C at the version in the paper, 32.0, and run Eva on small examples like mine until I can explain every alarm. Then I would try to reproduce your published behavior on the same warnings, and label the residual cases by cause before changing anything. That would quickly tell me whether this idea is worth pursuing. This is the part of the work I am missing, and I would rather say that plainly."
+      ],
+      "caution": "Do not inflate the synthetic example into an Eva result. No proposed change has been implemented or evaluated.",
+      "locator": "Author-owned synthetic C example; Evident v2 §6.1; no Eva or Evident run",
+      "tags": [
+        "run",
+        "implemented",
+        "Frama-C",
+        "AddressSanitizer",
+        "honesty",
+        "experience",
+        "Haonan"
+      ],
+      "followups": [
+        "What's your background in program analysis?",
+        "What would you work on in your first six months?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "What I have done",
+          "body": "I read the revised paper closely, and the earlier version. I read the official Eva documentation, mainly to understand what an alarm means. I wrote a small C example with a guarded caller, an unguarded caller and an off-by-one caller, and ran it natively with AddressSanitizer. That is everything, and I do not want to make it sound like more."
+        },
+        {
+          "heading": "Why the toy run does not count",
+          "body": "Those runs are concrete executions on selected inputs, which is the judge side of the comparison, not the Eva side. They can show that a bad case really overflows. They cannot show that the guarded case is safe for every input, and they say nothing about how Eva behaves. So I treat them as a sanity check of my example and nothing else."
+        },
+        {
+          "heading": "What I would do first",
+          "body": "I would install Frama-C at the version in the paper, 32.0, and run Eva on small examples like mine until I can explain every alarm. Then I would try to reproduce your published behavior on the same warnings, and label the residual cases by cause before changing anything. That would quickly tell me whether this idea is worth pursuing. This is the part of the work I am missing, and I would rather say that plainly."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-015",
+      "project": "haonan",
+      "topic": "Likely on your own papers",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "What did you personally build in A-ProS?",
+      "answer": "I designed the orchestration pipeline, built the browser automation that submitted candidates to Codeforces and captured verdicts, and built the SQLite experiment logging. I also ran the persistent-context ablations and the critic calibration analysis. It is an equal-contribution paper with Anika Tabassum.",
+      "detail": [
+        "I designed the orchestration that moves a task through the generator, the judge and the critic, and back to the generator. I built the browser automation that submitted candidates to Codeforces and captured the verdicts. And I built the SQLite logging that links each task, candidate, hint and verdict across attempts. Without that link, you only have final totals and you cannot study how a run developed.",
+        "I ran the persistent-context ablations, which compare keeping history with resetting it on 47 matched problems. I also did the critic calibration analysis, which pairs a critic's confidence with what happened on the next attempt. Both analyses depend on the logging being right, because each hint has to stay attached to the correct failed candidate.",
+        "I say I for those components and analyses, and we for the joint design and the paper's conclusions. Anika Tabassum and I share equal contribution, and the paper was a collaboration. My claim is that I built the experimental machinery and can explain what the stored runs do and do not support, not that I did everything alone."
+      ],
+      "caution": "Ownership follows the author contribution record, not author order.",
+      "locator": "A-ProS implementation sections; author contribution record",
+      "tags": [
+        "ownership",
+        "contribution",
+        "A-ProS",
+        "personally built",
+        "SQLite",
+        "Haonan"
+      ],
+      "followups": [
+        "Did memory really help in A-ProS? Was it statistically significant?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "What I built",
+          "body": "I designed the orchestration that moves a task through the generator, the judge and the critic, and back to the generator. I built the browser automation that submitted candidates to Codeforces and captured the verdicts. And I built the SQLite logging that links each task, candidate, hint and verdict across attempts. Without that link, you only have final totals and you cannot study how a run developed."
+        },
+        {
+          "heading": "What I analyzed",
+          "body": "I ran the persistent-context ablations, which compare keeping history with resetting it on 47 matched problems. I also did the critic calibration analysis, which pairs a critic's confidence with what happened on the next attempt. Both analyses depend on the logging being right, because each hint has to stay attached to the correct failed candidate."
+        },
+        {
+          "heading": "How I credit the rest",
+          "body": "I say I for those components and analyses, and we for the joint design and the paper's conclusions. Anika Tabassum and I share equal contribution, and the paper was a collaboration. My claim is that I built the experimental machinery and can explain what the stored runs do and do not support, not that I did everything alone."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-016",
+      "project": "haonan",
+      "topic": "Likely on your own papers",
+      "difficulty": "Core",
+      "source": "apros-paper",
+      "question": "Did memory really help in A-ProS? Was it statistically significant?",
+      "answer": "It clearly changed behavior, but the solve-rate result is not statistically significant. On 47 matched problems, keeping history gave 19 versus 14 solved with GPT-5 and 12 versus 8 with GPT-4, about 10.6 and 8.5 percentage points. The McNemar p-values were 0.063 and 0.125, so I call that directional.",
+      "detail": [
+        "On 47 problems we compared a stateful loop, which keeps history, with a stateless one that resets it. Both still got the latest feedback. GPT-5 with DeepSeek started at 10 solved and reached 19 with memory and 14 without. GPT-4 with DeepSeek started at 5 and reached 12 with memory and 8 without. So memory gained 5 and 4 tasks.",
+        "The raw exact McNemar p-values are 0.063 and 0.125, and the bootstrap intervals touch zero. At the usual 0.05 threshold that is not conclusive, and 47 tasks is a small set. The clearer effect is on repetition. Repeated failure verdicts fell from 41.8 to 11.8 percent for GPT-5, and from 40.8 to 14.2 percent for GPT-4, about 3.5 and 2.9 times lower. But that counts verdict categories, not semantic mistakes. Two wrong answers can have different causes.",
+        "I no longer use this result to argue for memory in Evident. It is a small result on a different kind of feedback, and history cannot create a missing function model or fix imprecision. History could be one ablation in a study, but the thing I actually took from A-ProS is the method: matched controls, and being honest when the numbers do not clear the bar."
+      ],
+      "caution": "Do not confuse this with the full ICPC result. The gain in A-ProS against a stateless loop is not a final accuracy ratio.",
+      "locator": "A-ProS Table 12, §5.3",
+      "tags": [
+        "memory",
+        "statistically significant",
+        "McNemar",
+        "47 problems",
+        "stateful",
+        "A-ProS",
+        "Haonan"
+      ],
+      "followups": [
+        "How does your earlier work connect to Evident?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "What we measured",
+          "body": "On 47 problems we compared a stateful loop, which keeps history, with a stateless one that resets it. Both still got the latest feedback. GPT-5 with DeepSeek started at 10 solved and reached 19 with memory and 14 without. GPT-4 with DeepSeek started at 5 and reached 12 with memory and 8 without. So memory gained 5 and 4 tasks."
+        },
+        {
+          "heading": "Why I do not call it significant",
+          "body": "The raw exact McNemar p-values are 0.063 and 0.125, and the bootstrap intervals touch zero. At the usual 0.05 threshold that is not conclusive, and 47 tasks is a small set. The clearer effect is on repetition. Repeated failure verdicts fell from 41.8 to 11.8 percent for GPT-5, and from 40.8 to 14.2 percent for GPT-4, about 3.5 and 2.9 times lower. But that counts verdict categories, not semantic mistakes. Two wrong answers can have different causes."
+        },
+        {
+          "heading": "What this means for Evident",
+          "body": "I no longer use this result to argue for memory in Evident. It is a small result on a different kind of feedback, and history cannot create a missing function model or fix imprecision. History could be one ablation in a study, but the thing I actually took from A-ProS is the method: matched controls, and being honest when the numbers do not clear the bar."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-017",
+      "project": "haonan",
+      "topic": "Likely on your own papers",
+      "difficulty": "Core",
+      "source": "xl-draft",
+      "question": "Why didn't the XLAgent graph improve localization?",
+      "answer": "Mainly because the two sides already share a searchable name. A shell-only localizer found both developer-file sides in every run on the 12 strict localization bugs, so the graph had nothing to add. The graph was largely accurate. It just did not give the agent information it lacked.",
+      "detail": [
+        "On the 12 strict localization bugs, the mean number with both sides found by file was 10.7 for full XL navigation, 11.7 for graph navigation without boundary edges, and 12.0 for shell only. So there was no measurable improvement. The graph itself was not bad. It connected both halves for 11 of 12 fixes at the boundary kinds it models, and a sampled estimate says 91.1 percent of its 8,565 cross-language edges are directly correct.",
+        "Many of these connections go through a shared name, such as a route fragment, a type or a configuration value. If you search that name in both languages, you reach the same two ends that the graph connects. So the representation can be accurate and still add nothing for this agent. A correct representation and a useful intervention are different claims.",
+        "I do not conclude that graphs are useless. The result is for this task set and setup, which also used gold-guided indexing. I would next separate bugs by how much text the two sides share, not make the graph bigger. The same lesson shapes how I think about my idea here. Extra information only counts if it beats an equal-budget control, which is why I want a blind entry arm."
+      ],
+      "caution": "Null result on 12 tasks. It does not show that graphs fail for all interaction bugs. XLAgent is under review.",
+      "locator": "XLAgent strict revision, RQ2 and RQ3 tables",
+      "tags": [
+        "XLAgent",
+        "graph",
+        "localization",
+        "null result",
+        "grep",
+        "shared name",
+        "Haonan"
+      ],
+      "followups": [
+        "Why isn't a two-sided edit the same as a correct patch?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "The result",
+          "body": "On the 12 strict localization bugs, the mean number with both sides found by file was 10.7 for full XL navigation, 11.7 for graph navigation without boundary edges, and 12.0 for shell only. So there was no measurable improvement. The graph itself was not bad. It connected both halves for 11 of 12 fixes at the boundary kinds it models, and a sampled estimate says 91.1 percent of its 8,565 cross-language edges are directly correct."
+        },
+        {
+          "heading": "Why it happened",
+          "body": "Many of these connections go through a shared name, such as a route fragment, a type or a configuration value. If you search that name in both languages, you reach the same two ends that the graph connects. So the representation can be accurate and still add nothing for this agent. A correct representation and a useful intervention are different claims."
+        },
+        {
+          "heading": "What I conclude",
+          "body": "I do not conclude that graphs are useless. The result is for this task set and setup, which also used gold-guided indexing. I would next separate bugs by how much text the two sides share, not make the graph bigger. The same lesson shapes how I think about my idea here. Extra information only counts if it beats an equal-budget control, which is why I want a blind entry arm."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-018",
+      "project": "haonan",
+      "topic": "Likely on your own papers",
+      "difficulty": "Core",
+      "source": "xl-draft",
+      "question": "Why isn't a two-sided edit the same as a correct patch?",
+      "answer": "Two-sided only describes where a patch touches code. Correct means the interaction between the two sides actually works. On our five executable bugs, XLAgent edited both developer sides on 4.0 of 5 bugs against 2.7 for the baseline, but that did not make it more correct.",
+      "detail": [
+        "A two-sided patch changes files in both languages, and in our strict metric each side includes a file the developer also changed. That tells you where the agent looked. It does not tell you whether the contract between the two sides is right. An agent can touch both files and implement the wrong contract. And a valid fix might use different files, or a justified one-sided change.",
+        "XLAgent edited both developer sides on an average of 4.0 of 5 bugs, against 2.7 for the baseline and 3.0 for the matched single agent. But only one bug, kagent 1245, was ever resolved by hidden tests. XLAgent resolved it in two of three runs and the baseline in all three. LLM judges counted 3 of 15 XLAgent patches as fully correct, against 4 for the baseline. So patch shape improved, and correctness did not.",
+        "The hidden tests have limits too, since a reference-coupled test can reject a valid fix. But that does not let me swap the harder outcome for the nicer proxy. I see the same trap in warning filtering. More warnings filtered looks like two-sided edits: it is an easy number to improve and not the same as a correct decision. That is why I would report filtered false alarms and filtered bugs separately."
+      ],
+      "caution": "Never treat a two-sided edit as evidence of correctness. These are five bugs with three runs each, so read them as directional.",
+      "locator": "XLAgent strict revision, evaluation setup, RQ4 and RQ5 tables",
+      "tags": [
+        "two-sided edit",
+        "correct patch",
+        "XLAgent",
+        "patch shape",
+        "hidden tests",
+        "Haonan"
+      ],
+      "followups": [
+        "How does your earlier work connect to Evident?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Shape versus behavior",
+          "body": "A two-sided patch changes files in both languages, and in our strict metric each side includes a file the developer also changed. That tells you where the agent looked. It does not tell you whether the contract between the two sides is right. An agent can touch both files and implement the wrong contract. And a valid fix might use different files, or a justified one-sided change."
+        },
+        {
+          "heading": "What our data showed",
+          "body": "XLAgent edited both developer sides on an average of 4.0 of 5 bugs, against 2.7 for the baseline and 3.0 for the matched single agent. But only one bug, kagent 1245, was ever resolved by hidden tests. XLAgent resolved it in two of three runs and the baseline in all three. LLM judges counted 3 of 15 XLAgent patches as fully correct, against 4 for the baseline. So patch shape improved, and correctness did not."
+        },
+        {
+          "heading": "Why I care about this here",
+          "body": "The hidden tests have limits too, since a reference-coupled test can reject a valid fix. But that does not let me swap the harder outcome for the nicer proxy. I see the same trap in warning filtering. More warnings filtered looks like two-sided edits: it is an easy number to improve and not the same as a correct decision. That is why I would report filtered false alarms and filtered bugs separately."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-019",
+      "project": "haonan",
+      "topic": "Likely on your own papers",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "How does your earlier work connect to Evident?",
+      "answer": "The connection is the question of what counts as evidence around a fallible model, not the feedback itself. LLM-ProS measured models against a judge, A-ProS kept the final verdict outside the model, and XLAgent showed that plausible results can mislead. Evident makes a similar move in program analysis, but its feedback means something different.",
+      "detail": [
+        "In all my work, the model proposes and something outside the model decides. In A-ProS, the critic and generator suggest fixes, and only the judge says what counts as fixed. Evident has the same shape: the LLM builds the harness and Eva decides. I also carry over habits, like keeping failed attempts, measuring repetition, using matched controls and checking what the agent could see. In XLAgent, 13 of 16 baseline runs had read the developers' fix before we isolated the environment.",
+        "The meaning of the signal. A judge failure says this candidate is wrong. An alarm does not say that the harness is wrong, or that the code is wrong. So a loop that worked in A-ProS cannot be copied here. Also, my small memory result does not show that history would help a formal analysis harness. I had to give up that analogy.",
+        "I can build experiment infrastructure, keep runs traceable, design fair controls and look hard at where a good-looking result might not hold. I cannot yet contribute formal methods expertise. So what I bring is complementary, and it is honest to say that the transfer is a research hypothesis and not something my earlier work has already shown."
+      ],
+      "caution": "A connection in method is not a result about Evident. Competitive programming and kernel warnings are different tasks.",
+      "locator": "A-ProS and XLAgent records; Evident v2 §3, §4; synthesis is my reasoning",
+      "tags": [
+        "connection",
+        "earlier work",
+        "evidence",
+        "A-ProS",
+        "XLAgent",
+        "LLM-ProS",
+        "Haonan"
+      ],
+      "followups": [
+        "Why are OJ feedback and Eva results fundamentally different?",
+        "Why do you want to work in this group?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "What carries over",
+          "body": "In all my work, the model proposes and something outside the model decides. In A-ProS, the critic and generator suggest fixes, and only the judge says what counts as fixed. Evident has the same shape: the LLM builds the harness and Eva decides. I also carry over habits, like keeping failed attempts, measuring repetition, using matched controls and checking what the agent could see. In XLAgent, 13 of 16 baseline runs had read the developers' fix before we isolated the environment."
+        },
+        {
+          "heading": "What does not carry over",
+          "body": "The meaning of the signal. A judge failure says this candidate is wrong. An alarm does not say that the harness is wrong, or that the code is wrong. So a loop that worked in A-ProS cannot be copied here. Also, my small memory result does not show that history would help a formal analysis harness. I had to give up that analogy."
+        },
+        {
+          "heading": "What I could contribute",
+          "body": "I can build experiment infrastructure, keep runs traceable, design fair controls and look hard at where a good-looking result might not hold. I cannot yet contribute formal methods expertise. So what I bring is complementary, and it is honest to say that the transfer is a research hypothesis and not something my earlier work has already shown."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-020",
+      "project": "haonan",
+      "topic": "Likely checks on whether you understood the paper",
+      "difficulty": "Technical",
+      "source": "evident-reading",
+      "question": "What do the three validation checks do?",
+      "answer": "Input range checks that tainted numeric inputs keep their full type range. Sink reachability checks that Eva actually analyzed the reported operation. Path reachability looks for a gap, where an intermediate reported point is unreachable while a later one is reached. Together they target known ways of losing a bug in a harness.",
+      "detail": [
+        "This has two parts. The assignment check works on the typed AST, and it requires assignments to numeric inputs to use a full-range abstract value, not a constant or a chosen range. The entry check uses Eva's values. It compares an input right after initialization and right before the selected entry, and any lost values mean generated setup code narrowed it. The paper's example is the LLM adding if (idx >= MAX) return 0; before the driver call.",
+        "Silence means nothing if the analysis never reached the code. Sink reachability checks that an abstract state reaches the reported operation. The paper's example is a generated struct with the wrong layout, so Eva loses all states before the sink. Path reachability catches a harness that reaches the sink but skips part of the reported flow. The example is setting algo.smbus_xfer to NULL, so a fallback path reaches the sink while the reported transfer path is skipped.",
+        "The paper is clear that validation does not establish that the harness preserves every relevant behavior. The input checks do not cover relational constraints, and path reachability does not show that one execution visits the points in order. Still, they matter in practice. Going from variant B to full Evident removed the one filtered bug, cut unresolved cases from five to one, and raised filtered false alarms from 99 to 102. A failed check goes back to the LLM for repair, and if that fails, the case is unresolved."
+      ],
+      "caution": "The checks are aimed at inadvertent construction errors. Deliberate evasion is outside the paper's scope.",
+      "locator": "Evident v2 §4.3, Table 2, §4.3.1 to §4.3.3, §6.4 Table 6",
+      "tags": [
+        "validation checks",
+        "input range",
+        "sink reachability",
+        "path reachability",
+        "Table 2",
+        "Haonan"
+      ],
+      "followups": [
+        "Why use abstract_value instead of letting the LLM choose ranges?",
+        "Does zero false negatives mean Evident is sound?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Input range",
+          "body": "This has two parts. The assignment check works on the typed AST, and it requires assignments to numeric inputs to use a full-range abstract value, not a constant or a chosen range. The entry check uses Eva's values. It compares an input right after initialization and right before the selected entry, and any lost values mean generated setup code narrowed it. The paper's example is the LLM adding if (idx >= MAX) return 0; before the driver call."
+        },
+        {
+          "heading": "Sink and path reachability",
+          "body": "Silence means nothing if the analysis never reached the code. Sink reachability checks that an abstract state reaches the reported operation. The paper's example is a generated struct with the wrong layout, so Eva loses all states before the sink. Path reachability catches a harness that reaches the sink but skips part of the reported flow. The example is setting algo.smbus_xfer to NULL, so a fallback path reaches the sink while the reported transfer path is skipped."
+        },
+        {
+          "heading": "What they do not prove",
+          "body": "The paper is clear that validation does not establish that the harness preserves every relevant behavior. The input checks do not cover relational constraints, and path reachability does not show that one execution visits the points in order. Still, they matter in practice. Going from variant B to full Evident removed the one filtered bug, cut unresolved cases from five to one, and raised filtered false alarms from 99 to 102. A failed check goes back to the LLM for repair, and if that fails, the case is unresolved."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-021",
+      "project": "haonan",
+      "topic": "Likely checks on whether you understood the paper",
+      "difficulty": "Technical",
+      "source": "evident-reading",
+      "question": "Why use abstract_value instead of letting the LLM choose ranges?",
+      "answer": "Because a chosen range is a place to hide an assumption. With abstract_value the LLM only says where an input is introduced, and the C type sets the range. Table 6 measures the effect: LLM-chosen inputs filtered 9 confirmed bugs, 8 of them from ranges that were too narrow, and abstract inputs reduced that to 1.",
+      "detail": [
+        "In the paper's motivating example, an LLM could reason that a value normally falls between 0 and 16 and write that with Frama_C_interval. The range looks reasonable, but the real input is an attacker-controlled long, and the negative values are what trigger the bug. Eva then correctly proves the wrong program safe. With abstract_value, the LLM picks the place and the type picks the range. That also avoids mistakes with typedefs, nested structures and unions.",
+        "Variant A lets the LLM choose input values, and it filters 116 false alarms and 9 confirmed bugs. Variant B uses abstract inputs and filters 99 and 1. So the LLM's freedom bought 17 more filtered false alarms and cost 8 more filtered bugs. In the paper's reading, the same narrow restrictions that hid bugs also let Eva rule out more false alarms. That is why filtering count alone is misleading.",
+        "It applies only to numeric values. Pointers, object identities, callback bindings and string literals stay concrete, because the LLM has to build a valid context. It also does not stop generated code from narrowing a value after it is initialized. In one generated harness the initialization was correct, and a bounds check was added right after it. That is why the entry check exists."
+      ],
+      "caution": "abstract_value protects the range when an input is introduced. It does not prove that the rest of the harness preserves the bug.",
+      "locator": "Evident v2 §2.3, §4.2, §4.3.1, §6.4 Table 6; 17 and 8 are my arithmetic",
+      "tags": [
+        "abstract_value",
+        "type-preserving",
+        "input range",
+        "Frama_C_interval",
+        "Table 6",
+        "Haonan"
+      ],
+      "followups": [
+        "What do the three validation checks do?",
+        "Doesn't adding a caller's guard narrow the inputs?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "The idea",
+          "body": "In the paper's motivating example, an LLM could reason that a value normally falls between 0 and 16 and write that with Frama_C_interval. The range looks reasonable, but the real input is an attacker-controlled long, and the negative values are what trigger the bug. Eva then correctly proves the wrong program safe. With abstract_value, the LLM picks the place and the type picks the range. That also avoids mistakes with typedefs, nested structures and unions."
+        },
+        {
+          "heading": "The evidence",
+          "body": "Variant A lets the LLM choose input values, and it filters 116 false alarms and 9 confirmed bugs. Variant B uses abstract inputs and filters 99 and 1. So the LLM's freedom bought 17 more filtered false alarms and cost 8 more filtered bugs. In the paper's reading, the same narrow restrictions that hid bugs also let Eva rule out more false alarms. That is why filtering count alone is misleading."
+        },
+        {
+          "heading": "Its limits",
+          "body": "It applies only to numeric values. Pointers, object identities, callback bindings and string literals stay concrete, because the LLM has to build a valid context. It also does not stop generated code from narrowing a value after it is initialized. In one generated harness the initialization was correct, and a bounds check was added right after it. That is why the entry check exists."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-022",
+      "project": "haonan",
+      "topic": "Likely checks on whether you understood the paper",
+      "difficulty": "Challenge",
+      "source": "evident-reading",
+      "question": "Evident's accuracy is lower than BugLens. Is it worse?",
+      "answer": "On accuracy alone, yes: 71.0 against 76.5 percent with GPT-5.5. But accuracy is the wrong summary here, because it counts a hidden bug the same as a kept false alarm. Evident keeps 25 more false alarms than BugLens and filters 14 fewer confirmed bugs. For a warning filter, I think that is the better trade.",
+      "detail": [
+        "The set has 160 false alarms and 40 confirmed bugs. If you filter every warning, you get 80 percent accuracy and hide all 40 bugs. That is higher than every system in Table 5. So accuracy on this set rewards filtering, whatever it costs. A filter should be read on two axes: how many false alarms it removes, and how many real bugs it removes.",
+        "With GPT-5.5, BugLens filters 127 false alarms and 14 confirmed bugs. Codex filters 124 and 18, and FN-aware Codex filters 123 and 11. Evident filters 102 and 0. So Evident gives up 22 to 25 false alarms against BugLens and plain Codex, and avoids 14 and 18 filtered bugs. Across all four LLMs, Evident filters no confirmed bug, while BugLens filters some with every model.",
+        "The trade is not free. 98 of 200 warnings still need inspection, and that is real human time. Whether the trade is right depends on how much a missed bug costs, and for kernel security I think that is high. It also depends on the model. With GPT-5.4 mini, BugLens filters only 28 false alarms and 4 bugs, so Evident is better on accuracy too, 59.0 against 32.0."
+      ],
+      "caution": "The 80 percent figure is my arithmetic from the paper's accuracy definition. It is not a system in the paper.",
+      "locator": "Evident v2 §6.1, Table 3, §6.3 Table 5; the 80 percent is my arithmetic",
+      "tags": [
+        "accuracy",
+        "BugLens",
+        "Codex",
+        "tradeoff",
+        "Table 5",
+        "RQ2",
+        "Haonan"
+      ],
+      "followups": [
+        "Does zero false negatives mean Evident is sound?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Why accuracy misleads here",
+          "body": "The set has 160 false alarms and 40 confirmed bugs. If you filter every warning, you get 80 percent accuracy and hide all 40 bugs. That is higher than every system in Table 5. So accuracy on this set rewards filtering, whatever it costs. A filter should be read on two axes: how many false alarms it removes, and how many real bugs it removes."
+        },
+        {
+          "heading": "The two axes",
+          "body": "With GPT-5.5, BugLens filters 127 false alarms and 14 confirmed bugs. Codex filters 124 and 18, and FN-aware Codex filters 123 and 11. Evident filters 102 and 0. So Evident gives up 22 to 25 false alarms against BugLens and plain Codex, and avoids 14 and 18 filtered bugs. Across all four LLMs, Evident filters no confirmed bug, while BugLens filters some with every model."
+        },
+        {
+          "heading": "Where the cost is real",
+          "body": "The trade is not free. 98 of 200 warnings still need inspection, and that is real human time. Whether the trade is right depends on how much a missed bug costs, and for kernel security I think that is high. It also depends on the model. With GPT-5.4 mini, BugLens filters only 28 false alarms and 4 bugs, so Evident is better on accuracy too, 59.0 against 32.0."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-023",
+      "project": "haonan",
+      "topic": "Likely checks on whether you understood the paper",
+      "difficulty": "Challenge",
+      "source": "evident-reading",
+      "question": "Does zero false negatives mean Evident is sound?",
+      "answer": "No, and the paper does not claim that. Eva's guarantee is about the harness, and the validation checks do not prove the harness preserved the bug. Zero of 40 is strong evidence for this set, but it is a measured result on a finite sample, not a theorem about the whole pipeline.",
+      "detail": [
+        "Eva is a sound analyzer, so a clean result rules the error out in the harness. To carry that back to the original program, every error-reaching execution must also be in the harness. The paper says validation does not attempt to establish that, and that construction errors outside the checks could still filter a bug. So the soundness of Eva is not the soundness of the system.",
+        "As a rough sketch, zero misses in 40 independent cases gives a 95 percent upper bound of about 7 percent on the miss rate. The cases are not really independent, because 39 of the 40 come from one detector. And zero false negatives means little on its own, since keeping every warning also gives zero. It has to be read with the 102 filtered false alarms.",
+        "It held across four LLMs, and the design fails toward keeping a warning. The six confirmed-bug outcomes left unresolved all failed validation, so they stayed for inspection. Variant B shows the checks do real work, because the only filtered bug there is caught once validation is on. So I would call it strong empirical evidence with inspectable artifacts, which is much better than an explanation, but not a proof."
+      ],
+      "caution": "The 7 percent bound is my rough calculation and assumes independence, which does not fully hold.",
+      "locator": "Evident v2 §3, §4.3, §6.1, §6.2.1, §6.4, §7; the bound is my arithmetic",
+      "tags": [
+        "soundness",
+        "zero false negatives",
+        "guarantee",
+        "proof",
+        "40 bugs",
+        "Haonan"
+      ],
+      "followups": [
+        "What are the limitations of Evident?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Where the guarantee stops",
+          "body": "Eva is a sound analyzer, so a clean result rules the error out in the harness. To carry that back to the original program, every error-reaching execution must also be in the harness. The paper says validation does not attempt to establish that, and that construction errors outside the checks could still filter a bug. So the soundness of Eva is not the soundness of the system."
+        },
+        {
+          "heading": "How strong zero of 40 is",
+          "body": "As a rough sketch, zero misses in 40 independent cases gives a 95 percent upper bound of about 7 percent on the miss rate. The cases are not really independent, because 39 of the 40 come from one detector. And zero false negatives means little on its own, since keeping every warning also gives zero. It has to be read with the 102 filtered false alarms."
+        },
+        {
+          "heading": "What is still good about it",
+          "body": "It held across four LLMs, and the design fails toward keeping a warning. The six confirmed-bug outcomes left unresolved all failed validation, so they stayed for inspection. Variant B shows the checks do real work, because the only filtered bug there is caught once validation is on. So I would call it strong empirical evidence with inspectable artifacts, which is much better than an explanation, but not a proof."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-024",
+      "project": "haonan",
+      "topic": "Likely checks on whether you understood the paper",
+      "difficulty": "Challenge",
+      "source": "evident-reading",
+      "question": "What are the limitations of Evident?",
+      "answer": "The main ones are that validation targets construction errors that were observed, so unseen ones can still lose a bug; the checks were developed on the same 200 warnings, though with a different LLM; the evaluation covers Android drivers and taint-style warnings; and three runs per warning is a limited read on nondeterminism.",
+      "detail": [
+        "Validation targets selected harness properties. It does not cover relational constraints, and reachability is checked point by point, not along one execution. Kernel models are trusted, so a wrong model could matter. And entries come from one reported call path, so other callers are outside the candidates. The paper itself states several of these in sections 4.3 and 7.",
+        "The checks were implemented and debugged on the same 200 warnings, using a different LLM, and fixed before the evaluation. So I would want to test on warnings not used in development. The set is Android kernel drivers with taint-style memory and integer warnings, and 39 of the 40 confirmed bugs come from one detector. Results may differ on other code, bug classes or backends. Labels come from earlier papers plus the authors' validation, so a wrong label could move the numbers. Three runs per warning is a limited estimate of LLM nondeterminism.",
+        "With GPT-5.5, 98 of 200 warnings remain for inspection. Serial runtime is about 10 minutes per case, mostly Eva, though cases parallelize. Weaker models leave many more unresolved. And the largest remaining causes, function models and precision, are not things a better harness prompt easily fixes. I see these as what I would examine next, not as errors. They are the normal limits of a careful study, and the paper is open about them."
+      ],
+      "caution": "Present these as next questions. Some points, like trusted models, are my reading of the design and not statements in the paper.",
+      "locator": "Evident v2 §4.3, §5 Development of the Checks, §6.1, §6.2, §7",
+      "tags": [
+        "limitations",
+        "threats to validity",
+        "weaknesses",
+        "critique",
+        "generalization",
+        "Haonan"
+      ],
+      "followups": [
+        "What would you work on in your first six months?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Limits on safety",
+          "body": "Validation targets selected harness properties. It does not cover relational constraints, and reachability is checked point by point, not along one execution. Kernel models are trusted, so a wrong model could matter. And entries come from one reported call path, so other callers are outside the candidates. The paper itself states several of these in sections 4.3 and 7."
+        },
+        {
+          "heading": "Limits on the evaluation",
+          "body": "The checks were implemented and debugged on the same 200 warnings, using a different LLM, and fixed before the evaluation. So I would want to test on warnings not used in development. The set is Android kernel drivers with taint-style memory and integer warnings, and 39 of the 40 confirmed bugs come from one detector. Results may differ on other code, bug classes or backends. Labels come from earlier papers plus the authors' validation, so a wrong label could move the numbers. Three runs per warning is a limited estimate of LLM nondeterminism."
+        },
+        {
+          "heading": "Limits on utility",
+          "body": "With GPT-5.5, 98 of 200 warnings remain for inspection. Serial runtime is about 10 minutes per case, mostly Eva, though cases parallelize. Weaker models leave many more unresolved. And the largest remaining causes, function models and precision, are not things a better harness prompt easily fixes. I see these as what I would examine next, not as errors. They are the normal limits of a careful study, and the paper is open about them."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-025",
+      "project": "haonan",
+      "topic": "Possible near the end",
+      "difficulty": "Core",
+      "source": "evident-analysis",
+      "question": "Your first email proposed something we already do. What did you learn from that?",
+      "answer": "I proposed feeding harness failures back across attempts, and Evident already does that. I had missed the repair loop in Section 4.2, so I was simply wrong. I learned to find out exactly what the baseline does before proposing anything, and to check how many cases an idea can really reach.",
+      "detail": [
+        "I read the paper too quickly. I saw a resemblance to A-ProS, treated a failed harness like a failed submission, and proposed something the repair loop already does. I also treated the remaining cases as if a better loop could address them, when most of them involve models or precision and not validation failures. Your questions made me go back and read it properly.",
+        "Three things. First, read the algorithm and the failure analysis, not just the abstract, and find out what the baseline already does. Second, work out the size of the target before proposing anything. Third, do not assume two kinds of feedback mean the same thing because they look alike. A judge failure and an alarm are very different signals, and I had not thought hard enough about that.",
+        "My idea became much smaller: one exit in the pipeline, at most 9 false alarms, with safety conditions that may stop it from filtering at all. I think that is a better idea, even though it is less exciting. Being corrected was useful, and I would rather be told early. If I am wrong again about what you already do, I want to know, which is why reproducing your work is my first step and not my last."
+      ],
+      "caution": "Own the mistake directly and do not defend it.",
+      "locator": "Evident v2 §4.2 Repair loop, §6.2.3; author's own account",
+      "tags": [
+        "mistake",
+        "first email",
+        "learned",
+        "correction",
+        "honesty",
+        "Haonan"
+      ],
+      "followups": [
+        "What exactly is different in your approach from our existing repair loop?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "What I got wrong",
+          "body": "I read the paper too quickly. I saw a resemblance to A-ProS, treated a failed harness like a failed submission, and proposed something the repair loop already does. I also treated the remaining cases as if a better loop could address them, when most of them involve models or precision and not validation failures. Your questions made me go back and read it properly."
+        },
+        {
+          "heading": "What I learned",
+          "body": "Three things. First, read the algorithm and the failure analysis, not just the abstract, and find out what the baseline already does. Second, work out the size of the target before proposing anything. Third, do not assume two kinds of feedback mean the same thing because they look alike. A judge failure and an alarm are very different signals, and I had not thought hard enough about that."
+        },
+        {
+          "heading": "What changed",
+          "body": "My idea became much smaller: one exit in the pipeline, at most 9 false alarms, with safety conditions that may stop it from filtering at all. I think that is a better idea, even though it is less exciting. Being corrected was useful, and I would rather be told early. If I am wrong again about what you already do, I want to know, which is why reproducing your work is my first step and not my last."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-026",
+      "project": "haonan",
+      "topic": "Possible near the end",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "What's your background in program analysis?",
+      "answer": "Honestly, it is limited. My background is LLM agents, evaluation and pipelines, not formal program analysis. I took compiler design and theory of computation, I built graph tooling over SCIP indexes in XLAgent, and I have read Evident and the Eva documentation. I have not used Frama-C or worked on the kernel.",
+      "detail": [
+        "From my CSE degree I have compiler design, theory of computation and operating systems. In XLAgent I worked with per-language symbols and references from SCIP, and added cross-language edges, which is practical code indexing but not soundness-level analysis. I have also done a lot of competitive programming, so I am comfortable reading low-level code and thinking about edge cases, including integer behavior.",
+        "I have not used Frama-C or Eva. I have no kernel development experience. I have not written an abstract domain or a formal proof. My research record is in software engineering and LLM evaluation, not security. I would rather say that first than have you discover it later. What I can do now is reason about what a result establishes, and I know that is not the same as being trained in the field.",
+        "I would start with concrete work: Eva on small C programs until I can explain each alarm, then the abstract interpretation basics properly, then real driver code and your harnesses. I learn fastest by reproducing a real result and debugging why it differs. That is how I learned evaluation, through finding leakage and scoring problems in my own experiments. I expect this to take real time, and I would plan for it."
+      ],
+      "caution": "Say the gap first. Do not overstate SCIP or graph tooling as formal program analysis.",
+      "locator": "Author profile and contribution record; XLAgent graph implementation",
+      "tags": [
+        "background",
+        "program analysis",
+        "experience",
+        "gap",
+        "coursework",
+        "Haonan"
+      ],
+      "followups": [
+        "What would you work on in your first six months?",
+        "Basics such as soundness, abstract interpretation, taint analysis or context sensitivity."
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "What I have",
+          "body": "From my CSE degree I have compiler design, theory of computation and operating systems. In XLAgent I worked with per-language symbols and references from SCIP, and added cross-language edges, which is practical code indexing but not soundness-level analysis. I have also done a lot of competitive programming, so I am comfortable reading low-level code and thinking about edge cases, including integer behavior."
+        },
+        {
+          "heading": "The gap",
+          "body": "I have not used Frama-C or Eva. I have no kernel development experience. I have not written an abstract domain or a formal proof. My research record is in software engineering and LLM evaluation, not security. I would rather say that first than have you discover it later. What I can do now is reason about what a result establishes, and I know that is not the same as being trained in the field."
+        },
+        {
+          "heading": "How I would close it",
+          "body": "I would start with concrete work: Eva on small C programs until I can explain each alarm, then the abstract interpretation basics properly, then real driver code and your harnesses. I learn fastest by reproducing a real result and debugging why it differs. That is how I learned evaluation, through finding leakage and scoring problems in my own experiments. I expect this to take real time, and I would plan for it."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-027",
+      "project": "haonan",
+      "topic": "Possible near the end",
+      "difficulty": "Technical",
+      "source": "concept",
+      "question": "Basics such as soundness, abstract interpretation, taint analysis or context sensitivity.",
+      "answer": "Soundness means that if the analysis says an error cannot happen, it really cannot happen in the analyzed program, usually at the cost of false alarms. Abstract interpretation gets there by computing over sets of values. Taint analysis tracks untrusted values from sources to sinks. Context sensitivity keeps different calls of a function apart instead of merging them.",
+      "detail": [
+        "A sound analysis cannot stay silent on an error of the kind it checks. Completeness is the other direction: it would never give a false alarm. For real programs you cannot have both and also be fully automatic, so Eva chooses soundness. Abstract interpretation is how it works. Instead of one value, it tracks an abstraction like an interval. If i is between 0 and 7, then i plus 1 is between 1 and 8. At a merge, a simple interval domain joins 0 and 10 into 0 to 10, which also contains values no execution produces. At loops, widening jumps to a stable bound so the analysis finishes. That lost precision is where false alarms come from.",
+        "Taint analysis marks values from an untrusted source, like a user-controlled ioctl argument, and follows them through assignments and calls to a sensitive sink, like an array index or a copy size. If a value reaches a sink without being properly bounded, it reports a warning. It over-reports because it often cannot tell whether a check really bounds the value. The warnings in Evident are taint-style, from SUTURE and a CodeQL out-of-bounds detector, and Evident's job is to rule out the ones that cannot happen.",
+        "A context-insensitive analysis merges every call to a function, so facts from different callers get mixed. A context-sensitive one keeps calls apart, for example by call site. As far as I understand it, Eva analyzes a function again with the state from each call, so it keeps context as long as it starts from the right place. My helper example is the extreme case of lost context: entering at helper means no caller at all, so i is full range. Related terms are flow sensitivity for statement order, field sensitivity for struct fields and path sensitivity for correlated branches."
+      ],
+      "caution": "These are conceptual explanations with illustrative examples, not findings. Definitions of soundness vary by community, so state which direction you mean.",
+      "locator": "Conceptual explanation; Evident v2 §3, §4.4, §6.1; official Eva documentation",
+      "tags": [
+        "soundness",
+        "abstract interpretation",
+        "taint analysis",
+        "context sensitivity",
+        "widening",
+        "completeness",
+        "basics",
+        "Haonan"
+      ],
+      "followups": [
+        "Does an Eva alarm mean there's a real bug?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Soundness and abstract interpretation",
+          "body": "A sound analysis cannot stay silent on an error of the kind it checks. Completeness is the other direction: it would never give a false alarm. For real programs you cannot have both and also be fully automatic, so Eva chooses soundness. Abstract interpretation is how it works. Instead of one value, it tracks an abstraction like an interval. If i is between 0 and 7, then i plus 1 is between 1 and 8. At a merge, a simple interval domain joins 0 and 10 into 0 to 10, which also contains values no execution produces. At loops, widening jumps to a stable bound so the analysis finishes. That lost precision is where false alarms come from."
+        },
+        {
+          "heading": "Taint analysis",
+          "body": "Taint analysis marks values from an untrusted source, like a user-controlled ioctl argument, and follows them through assignments and calls to a sensitive sink, like an array index or a copy size. If a value reaches a sink without being properly bounded, it reports a warning. It over-reports because it often cannot tell whether a check really bounds the value. The warnings in Evident are taint-style, from SUTURE and a CodeQL out-of-bounds detector, and Evident's job is to rule out the ones that cannot happen."
+        },
+        {
+          "heading": "Context sensitivity",
+          "body": "A context-insensitive analysis merges every call to a function, so facts from different callers get mixed. A context-sensitive one keeps calls apart, for example by call site. As far as I understand it, Eva analyzes a function again with the state from each call, so it keeps context as long as it starts from the right place. My helper example is the extreme case of lost context: entering at helper means no caller at all, so i is full range. Related terms are flow sensitivity for statement order, field sensitivity for struct fields and path sensitivity for correlated branches."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-028",
+      "project": "haonan",
+      "topic": "Possible near the end",
+      "difficulty": "Core",
+      "source": "proposal",
+      "question": "Why do you want to work in this group?",
+      "answer": "Because your group works on the question I ended up at: how to use LLMs without trusting their judgment about program behavior. My projects kept showing that plausible output is weak evidence. Evident gives a concrete answer using program analysis, which is the skill I do not yet have and most want to build.",
+      "detail": [
+        "I came to this question from the evaluation side, and your group comes from the analysis side. Evident says that if a stronger basis for a decision exists, the LLM should help make that analysis possible and not replace it. I also respect that the paper compares against your group's own earlier system, BugLens, and reports that it filters 14 confirmed bugs with GPT-5.5. Changing position in public, based on your own evidence, is how I want to do research.",
+        "I can build the experimental side: pipelines, logging, matched controls, leakage audits and careful reporting, including null results. I have also shipped software as an engineer, so I am used to systems that have to keep working. These are useful in a project where the LLM's output is a program that needs checking at every step.",
+        "I would need to learn formal analysis and kernel internals properly, and this group is where I could learn them on real problems. I am also not assuming anything about openings or funding, and I know this is a technical conversation and not a decision. What I want to find out today is whether my way of thinking would be useful to your work."
+      ],
+      "caution": "No position, funding or commitment is implied. This describes research fit only.",
+      "locator": "Evident v2 §6.3, §9; author research record",
+      "tags": [
+        "why this group",
+        "motivation",
+        "fit",
+        "PhD",
+        "BugLens",
+        "Haonan"
+      ],
+      "followups": [
+        "What would you work on in your first six months?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Why this research",
+          "body": "I came to this question from the evaluation side, and your group comes from the analysis side. Evident says that if a stronger basis for a decision exists, the LLM should help make that analysis possible and not replace it. I also respect that the paper compares against your group's own earlier system, BugLens, and reports that it filters 14 confirmed bugs with GPT-5.5. Changing position in public, based on your own evidence, is how I want to do research."
+        },
+        {
+          "heading": "What I would bring",
+          "body": "I can build the experimental side: pipelines, logging, matched controls, leakage audits and careful reporting, including null results. I have also shipped software as an engineer, so I am used to systems that have to keep working. These are useful in a project where the LLM's output is a program that needs checking at every step."
+        },
+        {
+          "heading": "What I would need, and what I am not assuming",
+          "body": "I would need to learn formal analysis and kernel internals properly, and this group is where I could learn them on real problems. I am also not assuming anything about openings or funding, and I know this is a technical conversation and not a decision. What I want to find out today is whether my way of thinking would be useful to your work."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-029",
+      "project": "haonan",
+      "topic": "Possible near the end",
+      "difficulty": "Core",
+      "source": "proposal",
+      "question": "What would you work on in your first six months?",
+      "answer": "First, learn by reproducing: get Frama-C and Eva running, reproduce part of Evident's published behavior, and read the residual cases. Then label those cases by cause and test the cheapest version of my idea against an equal-budget control. By six months I want a clear answer, even if the answer is that the idea does not work.",
+      "detail": [
+        "Learn the tools. I would run Eva on small C programs until I can explain every alarm, then on real driver code, using the setup in the paper. Then I would reproduce a part of the published behavior, so that I understand the harnesses and the pipeline before I change anything. Along the way I would study abstract interpretation properly and read the earlier work from your group.",
+        "Label before building. For the caller-constraint cases, I would record which entry was used, whether the guard is on the call witness, whether a higher entry is possible, and whether it times out. That labeling alone could answer whether my idea has a target. If it does not, I would move to what the data suggests, and precision may be the better direction. I would discuss that with you before spending more time.",
+        "If the idea survives, I would build the equal-budget blind arm and the guided arm with the negative controls, run them, and audit each newly filtered case by hand. Then I would write up the result, even if it is null. This is only my plan from outside the group. In practice I would work on what the group needs most, and I would expect it to change after the first month."
+      ],
+      "caution": "A proposed plan, not a commitment. It depends on the group's priorities and on what artifacts are available.",
+      "locator": "Proposed plan, based on Evident v2 §4.1, §6.2.3; not run",
+      "tags": [
+        "first six months",
+        "plan",
+        "reproduce",
+        "first project",
+        "PhD",
+        "Haonan"
+      ],
+      "followups": [
+        "Do you have any questions for me?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "Months one and two",
+          "body": "Learn the tools. I would run Eva on small C programs until I can explain every alarm, then on real driver code, using the setup in the paper. Then I would reproduce a part of the published behavior, so that I understand the harnesses and the pipeline before I change anything. Along the way I would study abstract interpretation properly and read the earlier work from your group."
+        },
+        {
+          "heading": "Months three and four",
+          "body": "Label before building. For the caller-constraint cases, I would record which entry was used, whether the guard is on the call witness, whether a higher entry is possible, and whether it times out. That labeling alone could answer whether my idea has a target. If it does not, I would move to what the data suggests, and precision may be the better direction. I would discuss that with you before spending more time."
+        },
+        {
+          "heading": "Months five and six",
+          "body": "If the idea survives, I would build the equal-budget blind arm and the guided arm with the negative controls, run them, and audit each newly filtered case by hand. Then I would write up the result, even if it is null. This is only my plan from outside the group. In practice I would work on what the group needs most, and I would expect it to change after the first month."
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "haonan-030",
+      "project": "haonan",
+      "topic": "Possible near the end",
+      "difficulty": "Core",
+      "source": "proposal",
+      "question": "Do you have any questions for me?",
+      "answer": "Yes. Does the implementation already try other entries after an accepted harness still alarms? Among the 9 caller-constraint cases, was the guard on the reported call witness? How do you reason about other callers for any entry above the sink? And what would make a new student useful to this work in the first year?",
+      "detail": [
+        "Does the implementation already try other entries after an accepted harness still alarms? If it does, I will drop the idea. Among the 9 missing caller constraint cases, did the guard sit on the reported call witness, and how high did those harnesses enter? Would equal-budget entry exploration be the right control? And what result would convince you that the idea adds nothing?",
+        "How do you reason about other callers when an entry sits above the sink, given that validation does not establish full preservation? I also read in the Eva documentation that an alarm is also an assumption, and that Eva continues as if it did not fire. So if a harness has a non-definite alarm earlier on the path and no alarm at the sink, how do you treat that clean result? I did not see this in the paper, and you may already handle it. And has anyone tried local directives like split or loop unroll for the precision cases, since they should not change which executions exist?",
+        "From your own experience, what is the hardest part of this work that the paper does not show? What separates a new student who becomes useful quickly from one who does not? If I wanted to start learning before anything else, what should I read or run first, and is there a part of the artifact I could try to reproduce? How is the group organized day to day, and how do you and Professor Qian work together?"
+      ],
+      "caution": "These are questions to ask, not claims. Only ask the Eva assumption question if the talk has gone deep, and keep the words \"I did not see this in the paper\". Pick two or three.",
+      "locator": "Evident v2 §4.3, §5 Result Extraction, §6.2.3; official Eva documentation; my questions",
+      "tags": [
+        "questions for Haonan",
+        "ask",
+        "end of interview",
+        "Eva assumption",
+        "split",
+        "loop unroll",
+        "Haonan"
+      ],
+      "followups": [
+        "What would you work on in your first six months?"
+      ],
+      "essential": false,
+      "answerSections": [
+        {
+          "heading": "About my idea",
+          "body": "Does the implementation already try other entries after an accepted harness still alarms? If it does, I will drop the idea. Among the 9 missing caller constraint cases, did the guard sit on the reported call witness, and how high did those harnesses enter? Would equal-budget entry exploration be the right control? And what result would convince you that the idea adds nothing?"
+        },
+        {
+          "heading": "About the design",
+          "body": "How do you reason about other callers when an entry sits above the sink, given that validation does not establish full preservation? I also read in the Eva documentation that an alarm is also an assumption, and that Eva continues as if it did not fire. So if a harness has a non-definite alarm earlier on the path and no alarm at the sink, how do you treat that clean result? I did not see this in the paper, and you may already handle it. And has anyone tried local directives like split or loop unroll for the precision cases, since they should not change which executions exist?"
+        },
+        {
+          "heading": "About the work and the group",
+          "body": "From your own experience, what is the hardest part of this work that the paper does not show? What separates a new student who becomes useful quickly from one who does not? If I wanted to start learning before anything else, what should I read or run first, and is there a part of the artifact I could try to reproduce? How is the group organized day to day, and how do you and Professor Qian work together?"
+        }
+      ],
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
     }
   ],
   "glossary": [
@@ -12855,19 +14325,49 @@
     "xl-setup": "0cce6389285de036f2c42a11a5a33d887ad787d125bf50f0d895abe8f297c7e4"
   },
   "answerRevision": {
-    "completeAnswers": 262,
-    "structuredSections": 786,
+    "completeAnswers": 292,
+    "structuredSections": 876,
     "languageReview": "WriteHuman MCP; factual claims and section structure preserved against the source-based drafts",
     "inputWords": 32469,
-    "manualSourceReviewedAdditions": 54
+    "manualSourceReviewedAdditions": 84
   },
   "studyPacks": [
     {
       "id": "evident",
-      "title": "Evident discussion pack",
-      "subtitle": "Your research, the meaning of reliability, and source-grounded analysis context.",
-      "description": "A separate reading and rehearsal path with full spoken answers, a concrete caller example, negative controls and a matched experimental plan. The timing below is a suggested rehearsal agenda.",
+      "title": "Haonan Li Interview prep",
+      "subtitle": "Thirty prepared questions with complete spoken answers, plus deeper backup on Evident, formal feedback and your research.",
+      "description": "Thirty likely questions with a complete spoken answer, a source and a caution for each. The earlier Evident study answers stay below as deeper backup. The timing is a suggested rehearsal agenda, and every proposed experiment remains unimplemented.",
       "questionIds": [
+        "haonan-001",
+        "haonan-002",
+        "haonan-003",
+        "haonan-004",
+        "haonan-005",
+        "haonan-006",
+        "haonan-007",
+        "haonan-008",
+        "haonan-009",
+        "haonan-010",
+        "haonan-011",
+        "haonan-012",
+        "haonan-013",
+        "haonan-014",
+        "haonan-015",
+        "haonan-016",
+        "haonan-017",
+        "haonan-018",
+        "haonan-019",
+        "haonan-020",
+        "haonan-021",
+        "haonan-022",
+        "haonan-023",
+        "haonan-024",
+        "haonan-025",
+        "haonan-026",
+        "haonan-027",
+        "haonan-028",
+        "haonan-029",
+        "haonan-030",
         "apros-036",
         "apros-047",
         "apros-038",
@@ -12915,6 +14415,68 @@
         "ask-020"
       ],
       "groups": [
+        {
+          "title": "Almost certain",
+          "minutes": 25,
+          "questionIds": [
+            "haonan-001",
+            "haonan-002",
+            "haonan-003",
+            "haonan-004",
+            "haonan-005",
+            "haonan-006",
+            "haonan-007",
+            "haonan-008"
+          ]
+        },
+        {
+          "title": "Very likely follow-ups on your idea",
+          "minutes": 12,
+          "questionIds": [
+            "haonan-009",
+            "haonan-010",
+            "haonan-011",
+            "haonan-012",
+            "haonan-013",
+            "haonan-014"
+          ]
+        },
+        {
+          "title": "Likely on your own papers",
+          "minutes": 10,
+          "questionIds": [
+            "haonan-015",
+            "haonan-016",
+            "haonan-017",
+            "haonan-018",
+            "haonan-019"
+          ]
+        },
+        {
+          "title": "Likely checks on whether you understood the paper",
+          "minutes": 8,
+          "questionIds": [
+            "haonan-020",
+            "haonan-021",
+            "haonan-022",
+            "haonan-023",
+            "haonan-024"
+          ]
+        },
+        {
+          "title": "Possible near the end",
+          "minutes": 5,
+          "questionIds": [
+            "haonan-025",
+            "haonan-026",
+            "haonan-027",
+            "haonan-028",
+            "haonan-029",
+            "haonan-030"
+          ]
+        }
+      ],
+      "backupGroups": [
         {
           "title": "Defend the title before the architecture",
           "minutes": 5,

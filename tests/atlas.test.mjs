@@ -115,6 +115,40 @@ test('the separate study pack resolves all selected answers and a 60-minute rehe
  assert.ok(pack.questionIds.includes('evident-022'));
  assert.equal(data.questions.filter(q=>q.project==='evident').length,36);
 });
+test('the renamed interview pack answers all 30 prepared questions in order and keeps its backup',()=>{
+ const pack=data.studyPacks.find(p=>p.id==='evident');
+ assert.equal(pack.title,'Haonan Li Interview prep');
+ const ids=pack.groups.flatMap(g=>g.questionIds);
+ assert.deepEqual(ids,Array.from({length:30},(_,i)=>`haonan-${String(i+1).padStart(3,'0')}`));
+ assert.deepEqual(pack.groups.map(g=>g.questionIds.length),[8,6,5,5,6]);
+ const backup=pack.backupGroups.flatMap(g=>g.questionIds);
+ assert.equal(backup.length,45);
+ for(const id of [...ids,...backup])assert.ok(pack.questionIds.includes(id),id);
+ for(const id of ids){
+  const q=data.questions.find(x=>x.id===id);
+  assert.equal(q.answerSections.length,3,id);
+  for(const s of q.answerSections){assert.ok(s.heading.length>3,id);assert.ok(s.body.length>150,id);}
+  assert.deepEqual(q.detail,q.answerSections.map(s=>s.body),id);
+ }
+});
+test('interview answers keep private details out and do not mix evaluation versions',()=>{
+ const text=JSON.stringify(data.questions.filter(q=>q.project==='haonan'));
+ assert.doesNotMatch(text,/zoom|@\w*\.?ucr|ucr\.edu|hli333|gmail|Thursday|9:30|8:30 PM|Sridharan|Fall 2027|in writing/i);
+ assert.doesNotMatch(text,/\b151\b|75\.5%|21 unresolved|28 still/);
+ const q=id=>data.questions.find(x=>x.id===id);
+ assert.match(q('haonan-014').answer,/have not run Frama-C, Eva or Evident/);
+ assert.match(q('haonan-004').answer,/proposal, not something I have built/);
+ assert.match(q('haonan-005').caution,/Causes overlap/);
+ assert.match(q('haonan-016').answer,/not statistically significant/);
+ assert.match(q('haonan-018').answer,/did not make it more correct/);
+});
+test('interview questions are found by the terms used in the conversation',()=>{
+ assert.ok(texts('call witness').includes("The LLM already chooses the entry from the call witness, so what's new?"));
+ assert.ok(texts('abstract_value').includes('Why use abstract_value instead of letting the LLM choose ranges?'));
+ assert.ok(texts('first email').includes('Your first email proposed something we already do. What did you learn from that?'));
+ assert.ok(texts('BugLens accuracy').includes("Evident's accuracy is lower than BugLens. Is it worse?"));
+ assert.ok(search(index,'',{project:'haonan'}).length===30);
+});
 test('title and formal-feedback queries retrieve complete relevant answers',()=>{
  assert.ok(texts('APPROS reliable').includes('What exactly does reliable mean in A-ProS?'));
  assert.ok(texts('towards autonomous').includes('What does the full A-ProS title mean?'));

@@ -1,4 +1,4 @@
-const CACHE='research-atlas-2026-11-05-v1';
+const CACHE='research-atlas-2026-11-05-v2';
 const ASSETS=['./','./index.html','./styles.css','./app.js','./search.js','./study.js','./favicon.svg','./data/content.json','./assets/llmpros-architecture.svg','./assets/apros-architecture.svg','./assets/xlagent-architecture.svg','./assets/evident-workflow.svg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('research-atlas-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});

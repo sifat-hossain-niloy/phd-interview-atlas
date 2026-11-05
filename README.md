@@ -1,6 +1,6 @@
 # Research Interview Atlas
 
-A static interview preparation field guide for Md Sifat Hossain, covering LLM-ProS, A-ProS and XLAgent, with 292 complete structured practice answers and 51 glossary entries.
+A static interview preparation field guide for Md Sifat Hossain, covering LLM-ProS, A-ProS and XLAgent, with 302 complete structured practice answers and 51 glossary entries.
 
 **[Open the website](https://sifat-hossain-niloy.github.io/phd-interview-atlas/)**
 
@@ -9,6 +9,7 @@ A static interview preparation field guide for Md Sifat Hossain, covering LLM-Pr
 - Search question titles, spoken answers, deeper explanations, limitations and follow-up prompts. All keywords must match; quoted phrases, exclusions, related terms and small typos are supported.
 - Filter by subject, topic, depth or essential questions.
 - Open [Haonan Li Interview prep](https://sifat-hossain-niloy.github.io/phd-interview-atlas/#interview/evident) for 30 prepared questions with complete answers, 45 deeper backup answers, title defenses, an OJ/Eva comparison, an interactive caller-context example and a 60-minute rehearsal plan.
+- Open [Research journey](https://sifat-hossain-niloy.github.io/phd-interview-atlas/#journey) for 10 complete speeches in simple spoken English: the whole story at one, two and about seven minutes, each project in detail, and common follow-ups.
 - Open each project for an overview, a spoken pitch, contribution notes, diagrams, numerical results and caveats. Every question opens a complete answer with three titled sections, written as an actual explanation or first-person response rather than coaching instructions.
 - Use the practice room for randomized sessions, a timer, answer reveal and self-assessed confidence.
 - Save questions and add private notes. Export and import browser study data from Sources & accuracy.
@@ -39,7 +40,7 @@ The guide distinguishes paper findings, author-provided ownership records, conce
 
 The original 208 expanded drafts, comprising 32,469 input words, were processed through 16 WriteHuman MCP batches. Returned paraphrases sometimes changed numbers, omitted content or lost headings. Factual claims and the section structure were checked against the source-based drafts; unsafe changes were rejected or repaired. Only wording changes that preserved the technical meaning were retained. A detector score was not treated as a factual-quality metric.
 
-The original paper review was completed on 23 October 2026. On 4 November, 54 manually written, source-reviewed answers were added: 18 title/claim defenses and 36 Evident/formal-analysis answers. On 5 November, 30 more manually written, source-reviewed answers were added for the interview pack. These additions did not use a rewriting service. The revised Evident v2 evaluation is kept separate from the earlier version, and all proposed experiments remain explicitly unimplemented.
+The original paper review was completed on 23 October 2026. On 4 November, 54 manually written, source-reviewed answers were added: 18 title/claim defenses and 36 Evident/formal-analysis answers. On 5 November, 30 more manually written, source-reviewed answers were added for the interview pack, and 10 research journey speeches in plain B1 to B2 spoken English. These additions did not use a rewriting service. The revised Evident v2 evaluation is kept separate from the earlier version, and all proposed experiments remain explicitly unimplemented.
 
 Source snapshots:
 

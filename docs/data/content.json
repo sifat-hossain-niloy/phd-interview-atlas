@@ -6431,7 +6431,7 @@
       "question": "Tell me about yourself.",
       "answer": "I am Md Sifat Hossain, a University of Dhaka CSE graduate and software engineer at Therap BD Ltd. My research has progressed from benchmarking LLM code generation to feedback-driven programming and cross-language debugging.",
       "detail": [
-        "I am Md Sifat Hossain. I completed my BSc in Computer Science and Engineering at the University of Dhaka in February 2025 and now work as a software engineer at Therap BD Ltd. Alongside engineering, I have been researching LLM-based programming and the reliability of software agents.",
+        "I am Md Sifat Hossain. I studied Computer Science and Engineering at the University of Dhaka and now work as a software engineer at Therap BD Ltd. Alongside engineering, I have been researching LLM-based programming and the reliability of software agents.",
         "In LLM-ProS I built evaluation infrastructure for first-attempt program generation on ICPC problems. A-ProS extended the question to iterative generation and debugging feedback, where I worked on orchestration, logging, ablations and calibration. My current XLAgent project studies cross-language interaction bugs and the limits of evaluating their repairs.",
         "I want to pursue doctoral research on evidence-grounded diagnosis and repair. What motivates me is understanding what an automated change really establishes, rather than only producing a plausible patch. I bring practical system-building experience and a growing interest in the experimental methods needed to support reliable claims."
       ],
@@ -6443,13 +6443,14 @@
         "tell me about yourself"
       ],
       "followups": [
+        "Can you tell me about your research journey?",
         "What do you want to research next?"
       ],
       "essential": true,
       "answerSections": [
         {
           "heading": "Background",
-          "body": "I am Md Sifat Hossain. I completed my BSc in Computer Science and Engineering at the University of Dhaka in February 2025 and now work as a software engineer at Therap BD Ltd. Alongside engineering, I have been researching LLM-based programming and the reliability of software agents."
+          "body": "I am Md Sifat Hossain. I studied Computer Science and Engineering at the University of Dhaka and now work as a software engineer at Therap BD Ltd. Alongside engineering, I have been researching LLM-based programming and the reliability of software agents."
         },
         {
           "heading": "Research trajectory",
@@ -6965,6 +6966,7 @@
         "pitch"
       ],
       "followups": [
+        "Can you tell me about your research journey?",
         "Which finding matters most to the lab?"
       ],
       "essential": true,
@@ -12662,6 +12664,7 @@
         "Haonan"
       ],
       "followups": [
+        "Can you tell me about your research journey?",
         "What did you personally build in A-ProS?",
         "Why didn't the XLAgent graph improve localization?"
       ],
@@ -14108,6 +14111,520 @@
         "date": "2026-11-05"
       },
       "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-001",
+      "project": "journey",
+      "topic": "The whole story",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "Can you tell me about your research journey?",
+      "answer": "My research asks how we can know that AI-written code really works. I started by testing models on very hard contest problems. Then I added feedback so models could learn from failures. Then I moved to real bugs between two programming languages. Each project made me more careful about what a good result really means.",
+      "detail": [
+        "Sure. My name is Md Sifat Hossain. I studied Computer Science and Engineering at the University of Dhaka, and now I work as a software engineer at Therap. I also continue my research with the Data Mining Research Lab at the University of Dhaka, with my supervisor Md. Fahim Arefin.\n\nMy journey started with competitive programming. I have solved more than a thousand problems, and I have competed at the ICPC Dhaka Regional. So I know how hard a contest problem can be. One small mistake, and the whole solution fails.\n\nWhen large language models became good at writing code, I wanted to test them in that hard setting. That became my first project, LLM-ProS. We took 166 problems from the ICPC World Finals, from 2011 to 2024. I built the pipeline. It collected the problems, cleaned them and put them in one format. Five models then got one attempt on each problem, and I sent the solutions to a real judge on Codeforces Gym. Nobody decided by reading the code. The judge decided.\n\nThe result was very clear. The best model, o1-mini, solved only 16 of the 166 problems, about 9.6 percent. Three of the five models solved none. This paper appeared at the LLM4Code workshop at ICSE 2025. So models could write code that looked right, but most of it failed. That gave me my next question. If the first attempt fails, can the model learn from the failure?",
+        "My undergraduate thesis looked at this idea, and A-ProS then studied it at a much larger scale. In A-ProS we split the work into two roles. One model, the generator, writes the code. If the judge rejects it, a second model, the critic, reads the problem, the failed code and the judge's result. The critic explains what went wrong. Then the generator tries again. Each problem gets one first attempt and up to three more rounds.\n\nWe tested two generators with three critics on 367 problems. My part was the system around the models. I designed the pipeline that moves each problem through these steps. I built the browser automation that submits code to Codeforces and reads the verdict. I built a SQLite database that records every attempt, so we could study what happened, not only the final score. I also ran the memory study and the calibration study.\n\nFeedback helped a lot. On the 167 ICPC problems, GPT-5 went from 39 solved to between 85 and 90. GPT-4 went from 15 to between 31 and 38. But I want to be careful here. We also tested whether keeping memory between rounds really helped. On 47 problems the version with memory solved more, but the difference was not statistically significant. The clear effect was that models repeated the same kind of failure much less. We also found that critics were not well calibrated. So a confident explanation is not the same as a correct one. This work was published in ACM TOSEM in 2026, and I share equal contribution with Anika Tabassum.",
+        "Contest problems are clean, but real software is not. In real projects, two languages often work together. For example, a Go service sends data to a Python client. A bug can sit between them, so each side looks fine alone. That is my third project, XLAgent, which is under review. I carried it out independently, with Md. Fahim Arefin as the PI.\n\nFirst I studied these bugs. I looked at 145 repositories that use Java with TypeScript, or Python with Go. We confirmed 86 cross-language bug fixes, and 31 passed a strict test: both languages really had to change because of how they work together. The biggest cause was a mismatch in the contract between the two sides. In simple words, the two sides disagree about the data they exchange.\n\nThen I built a graph that connects code across the two languages, and an agent that finds a bug and then fixes it. The hope was that the graph would help a lot. It did not. The graph was mostly correct, but a simple agent with only shell search, like grep, found both sides in every run, because the two sides share a name. On five bugs that we could run, my agent edited both languages more often, but its fixes were not more correct. I also found a serious problem in the evaluation. Before I isolated the environment, 13 of 16 baseline runs had read the developers' real fix, for example from Git history. So I rebuilt the setup and ran the experiments again.\n\nWhen I look back, each project made me more careful. First I asked, can the model solve it? Then I asked, can feedback help? Then I had to ask, how do we even know the fix is correct? That last question is what I care about now. For my PhD, I want to study how to tell a fix that only looks right from a fix that really works. To do that, I want to learn program analysis and better experiment design. I am happy to go deeper into any of these projects."
+      ],
+      "caution": "39 to 90 is out of 167 ICPC problems, not all 367. Memory results are not statistically significant. Two-sided edits are not correctness. XLAgent is under review, so never say it is accepted.",
+      "locator": "LLM-ProS Table II; A-ProS Tables 6 and 12; XLAgent strict 21 October revision RQ1 to RQ4; author profile and public CV",
+      "tags": [
+        "research journey",
+        "research story",
+        "describe your work",
+        "what have you done",
+        "overview",
+        "tell me about your research"
+      ],
+      "followups": [
+        "How did one project lead to the next?",
+        "What did you personally do across these projects?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "How it started: LLM-ProS",
+          "body": "Sure. My name is Md Sifat Hossain. I studied Computer Science and Engineering at the University of Dhaka, and now I work as a software engineer at Therap. I also continue my research with the Data Mining Research Lab at the University of Dhaka, with my supervisor Md. Fahim Arefin.\n\nMy journey started with competitive programming. I have solved more than a thousand problems, and I have competed at the ICPC Dhaka Regional. So I know how hard a contest problem can be. One small mistake, and the whole solution fails.\n\nWhen large language models became good at writing code, I wanted to test them in that hard setting. That became my first project, LLM-ProS. We took 166 problems from the ICPC World Finals, from 2011 to 2024. I built the pipeline. It collected the problems, cleaned them and put them in one format. Five models then got one attempt on each problem, and I sent the solutions to a real judge on Codeforces Gym. Nobody decided by reading the code. The judge decided.\n\nThe result was very clear. The best model, o1-mini, solved only 16 of the 166 problems, about 9.6 percent. Three of the five models solved none. This paper appeared at the LLM4Code workshop at ICSE 2025. So models could write code that looked right, but most of it failed. That gave me my next question. If the first attempt fails, can the model learn from the failure?"
+        },
+        {
+          "heading": "Adding feedback: A-ProS",
+          "body": "My undergraduate thesis looked at this idea, and A-ProS then studied it at a much larger scale. In A-ProS we split the work into two roles. One model, the generator, writes the code. If the judge rejects it, a second model, the critic, reads the problem, the failed code and the judge's result. The critic explains what went wrong. Then the generator tries again. Each problem gets one first attempt and up to three more rounds.\n\nWe tested two generators with three critics on 367 problems. My part was the system around the models. I designed the pipeline that moves each problem through these steps. I built the browser automation that submits code to Codeforces and reads the verdict. I built a SQLite database that records every attempt, so we could study what happened, not only the final score. I also ran the memory study and the calibration study.\n\nFeedback helped a lot. On the 167 ICPC problems, GPT-5 went from 39 solved to between 85 and 90. GPT-4 went from 15 to between 31 and 38. But I want to be careful here. We also tested whether keeping memory between rounds really helped. On 47 problems the version with memory solved more, but the difference was not statistically significant. The clear effect was that models repeated the same kind of failure much less. We also found that critics were not well calibrated. So a confident explanation is not the same as a correct one. This work was published in ACM TOSEM in 2026, and I share equal contribution with Anika Tabassum."
+        },
+        {
+          "heading": "Real software: XLAgent, and what I want next",
+          "body": "Contest problems are clean, but real software is not. In real projects, two languages often work together. For example, a Go service sends data to a Python client. A bug can sit between them, so each side looks fine alone. That is my third project, XLAgent, which is under review. I carried it out independently, with Md. Fahim Arefin as the PI.\n\nFirst I studied these bugs. I looked at 145 repositories that use Java with TypeScript, or Python with Go. We confirmed 86 cross-language bug fixes, and 31 passed a strict test: both languages really had to change because of how they work together. The biggest cause was a mismatch in the contract between the two sides. In simple words, the two sides disagree about the data they exchange.\n\nThen I built a graph that connects code across the two languages, and an agent that finds a bug and then fixes it. The hope was that the graph would help a lot. It did not. The graph was mostly correct, but a simple agent with only shell search, like grep, found both sides in every run, because the two sides share a name. On five bugs that we could run, my agent edited both languages more often, but its fixes were not more correct. I also found a serious problem in the evaluation. Before I isolated the environment, 13 of 16 baseline runs had read the developers' real fix, for example from Git history. So I rebuilt the setup and ran the experiments again.\n\nWhen I look back, each project made me more careful. First I asked, can the model solve it? Then I asked, can feedback help? Then I had to ask, how do we even know the fix is correct? That last question is what I care about now. For my PhD, I want to study how to tell a fix that only looks right from a fix that really works. To do that, I want to learn program analysis and better experiment design. I am happy to go deeper into any of these projects."
+        }
+      ],
+      "speech": {
+        "label": "Full research story",
+        "cue": "\"Tell me about your research journey.\" \"What have you been working on?\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-002",
+      "project": "journey",
+      "topic": "The whole story",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "Can you describe your work in about two minutes?",
+      "answer": "My research asks how we can know that AI-written code really works. I have done three projects: testing models on contest problems, adding feedback so they can improve, and studying real bugs between two languages. The last project taught me that a good-looking result is often not proof.",
+      "detail": [
+        "My research asks a simple question. How do we know that AI-written code really works? A model can write code that looks correct and still fail. So I build systems that test models with real evidence, and I study where that evidence can mislead us.",
+        "I have done three projects. The first is LLM-ProS. I built a pipeline that tested five models on 166 ICPC World Finals problems, using a real judge. The best model solved fewer than ten percent.\n\nThe second is A-ProS. We added a second model that reads the failure and gives a hint, and then the first model tries again. On 167 ICPC problems, GPT-5 went from 39 solved to between 85 and 90. I built the pipeline, the submission system and the logging, and I ran the memory and calibration studies.\n\nThe third is XLAgent, which is under review. I studied bugs that sit between two programming languages, and I built a graph and an agent to find and fix them.",
+        "XLAgent taught me the most, because many of its results were negative. The graph did not help the agent find bugs, because simple text search was already enough. More patches touched both languages, but they were not more correct. I also found that 13 of 16 baseline runs had read the real fix before I isolated the environment.\n\nSo now I care most about measurement. For my PhD, I want to study how to check that a software agent really fixed something, and not only that the result looks good."
+      ],
+      "caution": "Say \"fewer than ten percent\" only about first attempts in LLM-ProS. The 39 to 90 range is out of 167 ICPC problems.",
+      "locator": "LLM-ProS Table II; A-ProS Table 6; XLAgent strict 21 October revision",
+      "tags": [
+        "two minutes",
+        "describe your work",
+        "short overview",
+        "research overview"
+      ],
+      "followups": [
+        "Can you tell me about your research journey?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The main question",
+          "body": "My research asks a simple question. How do we know that AI-written code really works? A model can write code that looks correct and still fail. So I build systems that test models with real evidence, and I study where that evidence can mislead us."
+        },
+        {
+          "heading": "The three projects",
+          "body": "I have done three projects. The first is LLM-ProS. I built a pipeline that tested five models on 166 ICPC World Finals problems, using a real judge. The best model solved fewer than ten percent.\n\nThe second is A-ProS. We added a second model that reads the failure and gives a hint, and then the first model tries again. On 167 ICPC problems, GPT-5 went from 39 solved to between 85 and 90. I built the pipeline, the submission system and the logging, and I ran the memory and calibration studies.\n\nThe third is XLAgent, which is under review. I studied bugs that sit between two programming languages, and I built a graph and an agent to find and fix them."
+        },
+        {
+          "heading": "What I learned",
+          "body": "XLAgent taught me the most, because many of its results were negative. The graph did not help the agent find bugs, because simple text search was already enough. More patches touched both languages, but they were not more correct. I also found that 13 of 16 baseline runs had read the real fix before I isolated the environment.\n\nSo now I care most about measurement. For my PhD, I want to study how to check that a software agent really fixed something, and not only that the result looks good."
+        }
+      ],
+      "speech": {
+        "label": "Two-minute version",
+        "cue": "\"Briefly, what is your research about?\" \"Describe your work.\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-003",
+      "project": "journey",
+      "topic": "The whole story",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "Can you summarize your research in one minute?",
+      "answer": "I study how to get reliable evidence that AI-written code really works. I tested models on ICPC problems, added feedback to help them improve, and then moved to real bugs across two languages. Now I want to study how to measure a correct fix.",
+      "detail": [
+        "I study how to get reliable evidence that AI-written code really works. I come from competitive programming, so I started by testing models on ICPC World Finals problems.",
+        "In LLM-ProS, the best of five models solved fewer than ten percent on its first try. So in A-ProS, we added a critic model and judge feedback. On 167 ICPC problems, GPT-5 went from 39 solved to between 85 and 90.",
+        "Then, in XLAgent, which is under review, I moved to real bugs across two languages. My graph did not improve bug finding, and patches that touched both languages were not more correct. That taught me to question the measurement itself, and that is what I want to study in my PhD."
+      ],
+      "caution": "This is the shortest version. Stop here and let the professor choose what to ask next.",
+      "locator": "LLM-ProS Table II; A-ProS Table 6; XLAgent strict 21 October revision",
+      "tags": [
+        "one minute",
+        "elevator pitch",
+        "short summary",
+        "research overview"
+      ],
+      "followups": [
+        "Can you describe your work in about two minutes?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "What I study",
+          "body": "I study how to get reliable evidence that AI-written code really works. I come from competitive programming, so I started by testing models on ICPC World Finals problems."
+        },
+        {
+          "heading": "What I did",
+          "body": "In LLM-ProS, the best of five models solved fewer than ten percent on its first try. So in A-ProS, we added a critic model and judge feedback. On 167 ICPC problems, GPT-5 went from 39 solved to between 85 and 90."
+        },
+        {
+          "heading": "Where it led",
+          "body": "Then, in XLAgent, which is under review, I moved to real bugs across two languages. My graph did not improve bug finding, and patches that touched both languages were not more correct. That taught me to question the measurement itself, and that is what I want to study in my PhD."
+        }
+      ],
+      "speech": {
+        "label": "One-minute version",
+        "cue": "\"Tell me quickly what you work on.\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-004",
+      "project": "journey",
+      "topic": "The whole story",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "What work have you done so far?",
+      "answer": "I have done three research projects and an undergraduate thesis. Two papers are published, LLM-ProS and A-ProS, and XLAgent is under review. I also work as a software engineer at Therap, and I have a strong competitive programming background.",
+      "detail": [
+        "I have done three research projects. LLM-ProS is a workshop paper from the LLM4Code workshop at ICSE 2025. It tests five models on ICPC World Finals problems. A-ProS is a journal paper in ACM TOSEM in 2026. It is a loop where one model writes code and another model helps fix it. XLAgent is my current project, and it is under review. It looks at bugs that sit between two programming languages.\n\nI also wrote an undergraduate thesis with Md. Fahim Arefin as my advisor. Its title is A Hybrid LLM Feedback Framework for Automated Competitive Programming Workflows. It tested a pipeline where several models work together to find and fix errors, with Codeforces as the check.",
+        "In these projects, I do the hands-on research work. I build datasets. I write scrapers and browser automation. I connect models, judges and tools into one pipeline. I log every step in a database, so that the results can be checked later. Then I run the experiments and analyze the results, including controlled comparisons and basic statistics. In XLAgent I also built code indexing tools and an isolated test environment.",
+        "I am also a software engineer at Therap, where I work on a healthcare software system with Java, Spring and Hibernate. So I know what it means to change real code safely. I also worked at Turing on code and reasoning annotation, and I led a team of ten people there. That taught me how hard it is to judge code quality in a consistent way.\n\nAnd I come from competitive programming. I have solved more than a thousand problems, and I have competed at the ICPC Dhaka Regional. All of this gives me a strong practical base. What I still need is deeper training in research methods and program analysis."
+      ],
+      "caution": "LLM-ProS is a workshop paper, not the ICSE main track. XLAgent is under review. Do not name a venue for it.",
+      "locator": "Author profile and public CV; LLM-ProS and A-ProS publication records",
+      "tags": [
+        "what work have you done",
+        "experience",
+        "list of work",
+        "thesis",
+        "Therap",
+        "publications"
+      ],
+      "followups": [
+        "What did you personally do across these projects?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "Research projects",
+          "body": "I have done three research projects. LLM-ProS is a workshop paper from the LLM4Code workshop at ICSE 2025. It tests five models on ICPC World Finals problems. A-ProS is a journal paper in ACM TOSEM in 2026. It is a loop where one model writes code and another model helps fix it. XLAgent is my current project, and it is under review. It looks at bugs that sit between two programming languages.\n\nI also wrote an undergraduate thesis with Md. Fahim Arefin as my advisor. Its title is A Hybrid LLM Feedback Framework for Automated Competitive Programming Workflows. It tested a pipeline where several models work together to find and fix errors, with Codeforces as the check."
+        },
+        {
+          "heading": "The kind of work I do",
+          "body": "In these projects, I do the hands-on research work. I build datasets. I write scrapers and browser automation. I connect models, judges and tools into one pipeline. I log every step in a database, so that the results can be checked later. Then I run the experiments and analyze the results, including controlled comparisons and basic statistics. In XLAgent I also built code indexing tools and an isolated test environment."
+        },
+        {
+          "heading": "Work outside the lab",
+          "body": "I am also a software engineer at Therap, where I work on a healthcare software system with Java, Spring and Hibernate. So I know what it means to change real code safely. I also worked at Turing on code and reasoning annotation, and I led a team of ten people there. That taught me how hard it is to judge code quality in a consistent way.\n\nAnd I come from competitive programming. I have solved more than a thousand problems, and I have competed at the ICPC Dhaka Regional. All of this gives me a strong practical base. What I still need is deeper training in research methods and program analysis."
+        }
+      ],
+      "speech": {
+        "label": "What work have you done?",
+        "cue": "\"What have you done so far?\" \"Walk me through your experience.\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-005",
+      "project": "journey",
+      "topic": "Project by project",
+      "difficulty": "Core",
+      "source": "llm-paper",
+      "question": "Can you explain LLM-ProS and what you did in it?",
+      "answer": "LLM-ProS tested five large language models on 166 ICPC World Finals problems, with one attempt each and a real judge. I built the pipeline that collected the problems and submitted the solutions, and I analyzed the results. The best model solved only 16 problems.",
+      "detail": [
+        "LLM-ProS is my first paper. It appeared at the LLM4Code workshop at ICSE 2025. The question was simple. How well can large language models solve very hard programming problems on the first try?\n\nWe chose ICPC World Finals problems for a reason. These problems are hard. A solution needs the right algorithm and correct code. It must handle edge cases, and it must stay inside the time and memory limits. So code can look very good and still fail. That is why a real judge is a much stronger test than a person reading the code, or another model saying it looks fine.",
+        "My part was the evaluation pipeline, so let me walk you through it. First, I collected 166 World Finals problems, from 2011 to 2024, from the official ICPC website. Each problem has a statement, input and output rules, sample tests and limits.\n\nSecond, I cleaned each problem and put it into one standard format, so every model received the problem in the same way. This step matters. If I lose one rule while cleaning, then I am testing a different problem.\n\nThird, five models generated solutions: GPT-4o, Mistral Large, Llama 3.1 405B, o1-mini and o1-preview. Each model got one attempt on each problem. Fourth, I built the automatic submission to Codeforces Gym, so every solution got a real verdict, such as accepted, wrong answer, time limit exceeded, runtime error or compile error. Finally, I analyzed those verdicts, and also the error types and the use of time and memory.",
+        "The result was clear. o1-mini solved 16 of the 166 problems, which is 9.64 percent. o1-preview solved 15. The other three models solved none in this setting. Most of the o1-mini failures, 124 of them, were wrong answers.\n\nI want to be honest about what this does not show. The o1 models did better, but this study cannot prove that chain-of-thought reasoning was the reason. We also compared results by year, which raises the question of whether models had seen older problems during training. But we cannot prove that either.\n\nThis project taught me two things. First, the pipeline is part of the research. If it has a mistake, the result is wrong. Second, the low score gave me my next question. If most first attempts fail, can a model use the failure to do better? That question became A-ProS."
+      ],
+      "caution": "A workshop paper, not the ICSE main track. Do not claim that chain-of-thought caused the gap, or that contamination was proved.",
+      "locator": "LLM-ProS §III, Table II, §IV; author contribution record",
+      "tags": [
+        "LLM-ProS",
+        "explain project",
+        "first paper",
+        "ICPC",
+        "pipeline",
+        "what did you do"
+      ],
+      "followups": [
+        "Can you explain A-ProS and what you did in it?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The problem",
+          "body": "LLM-ProS is my first paper. It appeared at the LLM4Code workshop at ICSE 2025. The question was simple. How well can large language models solve very hard programming problems on the first try?\n\nWe chose ICPC World Finals problems for a reason. These problems are hard. A solution needs the right algorithm and correct code. It must handle edge cases, and it must stay inside the time and memory limits. So code can look very good and still fail. That is why a real judge is a much stronger test than a person reading the code, or another model saying it looks fine."
+        },
+        {
+          "heading": "What I did, step by step",
+          "body": "My part was the evaluation pipeline, so let me walk you through it. First, I collected 166 World Finals problems, from 2011 to 2024, from the official ICPC website. Each problem has a statement, input and output rules, sample tests and limits.\n\nSecond, I cleaned each problem and put it into one standard format, so every model received the problem in the same way. This step matters. If I lose one rule while cleaning, then I am testing a different problem.\n\nThird, five models generated solutions: GPT-4o, Mistral Large, Llama 3.1 405B, o1-mini and o1-preview. Each model got one attempt on each problem. Fourth, I built the automatic submission to Codeforces Gym, so every solution got a real verdict, such as accepted, wrong answer, time limit exceeded, runtime error or compile error. Finally, I analyzed those verdicts, and also the error types and the use of time and memory."
+        },
+        {
+          "heading": "What we found, and what it taught me",
+          "body": "The result was clear. o1-mini solved 16 of the 166 problems, which is 9.64 percent. o1-preview solved 15. The other three models solved none in this setting. Most of the o1-mini failures, 124 of them, were wrong answers.\n\nI want to be honest about what this does not show. The o1 models did better, but this study cannot prove that chain-of-thought reasoning was the reason. We also compared results by year, which raises the question of whether models had seen older problems during training. But we cannot prove that either.\n\nThis project taught me two things. First, the pipeline is part of the research. If it has a mistake, the result is wrong. Second, the low score gave me my next question. If most first attempts fail, can a model use the failure to do better? That question became A-ProS."
+        }
+      ],
+      "speech": {
+        "label": "LLM-ProS in detail",
+        "cue": "\"What is LLM-ProS?\" \"What did you do in your first paper?\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-006",
+      "project": "journey",
+      "topic": "Project by project",
+      "difficulty": "Core",
+      "source": "apros-paper",
+      "question": "Can you explain A-ProS and what you did in it?",
+      "answer": "A-ProS is a loop where one model writes code, a judge tests it, and a second model explains the failure so the first model can try again. We tested six model pairs on 367 problems. I built the pipeline, the submission system and the logging, and I ran the memory and calibration studies.",
+      "detail": [
+        "A-ProS is my journal paper, published in ACM TOSEM in 2026. I share equal contribution with Anika Tabassum. After LLM-ProS, we knew that most first attempts fail. So we asked, what happens after a failure?\n\nThe main idea is to split the work into two roles. One model, the generator, writes a C++ solution. We used GPT-4 and GPT-5. A real judge tests it. If it fails, another model, the critic, looks at the problem, the failed code and the judge's result, and it explains what went wrong. We used three critics: Codestral, Llama 3.3 and DeepSeek-R1. The generator then tries again, and it can see the history of earlier attempts.\n\nEach problem gets one first attempt and up to three more rounds, so four submissions at most. Two generators and three critics give six workflows. We tested them on 367 problems: 167 from the ICPC World Finals and 200 from Codeforces.",
+        "My work was mainly the system that makes this loop run, and the studies on top of it. I designed the orchestration pipeline. It moves each problem through the steps: get the problem, generate code, submit it, read the verdict, ask the critic and try again.\n\nI built the browser automation that submits the code to Codeforces and waits for the final verdict. Browser automation can break easily, so it needed time limits and backup steps. I also built the SQLite logging. It links each problem, code version, hint and verdict. This sounds simple, but it made the analysis possible. Without it, we would only have a final score, and we could not study how a run developed.\n\nI also ran two studies. The first was the memory study. On 47 problems, I compared the normal loop with a version that clears its memory before each round, but still gets the latest failure and hint. The second was the calibration study. We asked each critic how confident it was, and compared that with whether the next attempt was accepted.",
+        "Feedback helped a lot. On ICPC, GPT-5 workflows went from 39 accepted to between 85 and 90, out of 167. GPT-4 workflows went from 15 to between 31 and 38. On Codeforces, out of 200, GPT-5 workflows reached 73 to 82, and GPT-4 workflows reached 42 to 52. DeepSeek-R1 gave the best numbers, but the differences between critics were not significant after correction.\n\nI am careful about the memory result. With memory, GPT-5 solved 19 against 14, and GPT-4 solved 12 against 8. But the p-values were 0.063 and 0.125, so it is not statistically significant. The clearer effect was on repetition. With GPT-5, repeated failure verdicts were about 12 percent with memory, against about 42 percent without it. The calibration study showed that critics were not well calibrated, so you should not trust a hint only because a model sounds sure.\n\nThere is also one limit on the word autonomous. For some ICPC problems, detailed test information had to be collected by hand. My main lesson is that a model's explanation is only a suggestion. The judge decides. That idea stayed with me in my later work."
+      ],
+      "caution": "39 to 90 is out of 167, not 367. A gain ratio is not a final accuracy ratio. Memory solve-rate results are not statistically significant, and repeated verdicts are not the same as repeated semantic mistakes.",
+      "locator": "A-ProS §3, Tables 6, 7, 11 and 12, calibration results; author contribution record",
+      "tags": [
+        "A-ProS",
+        "explain project",
+        "journal paper",
+        "generator",
+        "critic",
+        "what did you do"
+      ],
+      "followups": [
+        "Can you explain XLAgent and what you did in it?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The idea",
+          "body": "A-ProS is my journal paper, published in ACM TOSEM in 2026. I share equal contribution with Anika Tabassum. After LLM-ProS, we knew that most first attempts fail. So we asked, what happens after a failure?\n\nThe main idea is to split the work into two roles. One model, the generator, writes a C++ solution. We used GPT-4 and GPT-5. A real judge tests it. If it fails, another model, the critic, looks at the problem, the failed code and the judge's result, and it explains what went wrong. We used three critics: Codestral, Llama 3.3 and DeepSeek-R1. The generator then tries again, and it can see the history of earlier attempts.\n\nEach problem gets one first attempt and up to three more rounds, so four submissions at most. Two generators and three critics give six workflows. We tested them on 367 problems: 167 from the ICPC World Finals and 200 from Codeforces."
+        },
+        {
+          "heading": "What I built and ran",
+          "body": "My work was mainly the system that makes this loop run, and the studies on top of it. I designed the orchestration pipeline. It moves each problem through the steps: get the problem, generate code, submit it, read the verdict, ask the critic and try again.\n\nI built the browser automation that submits the code to Codeforces and waits for the final verdict. Browser automation can break easily, so it needed time limits and backup steps. I also built the SQLite logging. It links each problem, code version, hint and verdict. This sounds simple, but it made the analysis possible. Without it, we would only have a final score, and we could not study how a run developed.\n\nI also ran two studies. The first was the memory study. On 47 problems, I compared the normal loop with a version that clears its memory before each round, but still gets the latest failure and hint. The second was the calibration study. We asked each critic how confident it was, and compared that with whether the next attempt was accepted."
+        },
+        {
+          "heading": "What we found, and what it taught me",
+          "body": "Feedback helped a lot. On ICPC, GPT-5 workflows went from 39 accepted to between 85 and 90, out of 167. GPT-4 workflows went from 15 to between 31 and 38. On Codeforces, out of 200, GPT-5 workflows reached 73 to 82, and GPT-4 workflows reached 42 to 52. DeepSeek-R1 gave the best numbers, but the differences between critics were not significant after correction.\n\nI am careful about the memory result. With memory, GPT-5 solved 19 against 14, and GPT-4 solved 12 against 8. But the p-values were 0.063 and 0.125, so it is not statistically significant. The clearer effect was on repetition. With GPT-5, repeated failure verdicts were about 12 percent with memory, against about 42 percent without it. The calibration study showed that critics were not well calibrated, so you should not trust a hint only because a model sounds sure.\n\nThere is also one limit on the word autonomous. For some ICPC problems, detailed test information had to be collected by hand. My main lesson is that a model's explanation is only a suggestion. The judge decides. That idea stayed with me in my later work."
+        }
+      ],
+      "speech": {
+        "label": "A-ProS in detail",
+        "cue": "\"Explain A-ProS.\" \"What is your journal paper about?\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-007",
+      "project": "journey",
+      "topic": "Project by project",
+      "difficulty": "Core",
+      "source": "xl-draft",
+      "question": "Can you explain XLAgent and what you did in it?",
+      "answer": "XLAgent studies bugs that sit between two programming languages, and tests an agent that tries to find and fix them. I carried out the project with Md. Fahim Arefin as PI. The graph did not improve bug finding, and patches that touched both languages were not more correct. It is under review.",
+      "detail": [
+        "XLAgent is my current project, and it is under review. I carried it out independently, with Md. Fahim Arefin as the PI.\n\nReal software often uses two languages. For example, a Go service may send data to a Python client. The two sides talk through things like web routes, JSON fields or gRPC messages. A compiler checks each language alone, so it may not see a mismatch between them. Each side can look correct, and the bug is between them.\n\nSo first I wanted to understand these bugs. I looked at 145 repositories that use Java with TypeScript, or Python with Go. They had 1,206 merged pull requests that changed both languages. From these we confirmed 86 cross-language bug fixes. Then we applied a strict rule: both languages must really need to change because of how they work together. Only 31 passed. The biggest cause was a contract or schema mismatch, which means the two sides disagree about the data they exchange. That was 11 of the 31.",
+        "Then I built two main things. The first is a graph that connects code across languages. It starts from per-language code indexes made with SCIP. Then it adds links for things like routes, headers, shared data types and protobuf services. There are 9,605 of these boundary links. From a labeled sample, we estimate that about 91 percent of the cross-language links are correct.\n\nThe second is the agent, and it works in steps. A read-only agent finds the related code on both sides. Next, a contract step checks what the two sides agree on and suggests possible fixes. Then an editing agent writes the patch. A validation gate checks for new basic errors, and visible tests can start another round. The hidden tests are only used for the final score, so the agent cannot see them. I also built the evaluation setup around all of this.",
+        "The results were mostly not what we hoped for, and that is why I find them useful. First, the graph did not improve bug finding. On 12 bugs, a simple agent with only shell search, like grep, found both sides in every run. The two sides share a name, so search reaches the same code. Second, on five bugs that we could run, my system edited the developers' files on both sides more often, 4.0 of 5 bugs against 2.7 for the baseline. But correctness did not improve. Hidden tests only ever passed on one bug, and the baseline passed it more often, in all three runs against two.\n\nI also found a serious problem in the evaluation. Before I isolated the environment, 13 of 16 baseline runs had read the developers' real fix or later information, for example from Git history. So a run could look successful only because it found the answer. I added isolation and auditing, and I ran the experiments again. Later I found a second leak through the files of the graph tool, and I replaced those runs too.\n\nThe tests also have limits. In one bug, a patch could pass the test on the Go side and still handle the Python side wrongly. So my main lesson is this. A result that looks good is not enough. We need a way to check that the whole interaction really works. That is the problem I want to work on next."
+      ],
+      "caution": "Under review, so do not name a venue or claim acceptance. Use only the strict numbers. 86 is confirmed fixes and 31 is the strict set. Two-sided edits are not correctness.",
+      "locator": "XLAgent strict 21 October revision, RQ1 to RQ5; leakage audit; author ownership record",
+      "tags": [
+        "XLAgent",
+        "explain project",
+        "current project",
+        "cross-language",
+        "polyglot",
+        "what did you do"
+      ],
+      "followups": [
+        "What have you learned from your research so far?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "The problem and the bug study",
+          "body": "XLAgent is my current project, and it is under review. I carried it out independently, with Md. Fahim Arefin as the PI.\n\nReal software often uses two languages. For example, a Go service may send data to a Python client. The two sides talk through things like web routes, JSON fields or gRPC messages. A compiler checks each language alone, so it may not see a mismatch between them. Each side can look correct, and the bug is between them.\n\nSo first I wanted to understand these bugs. I looked at 145 repositories that use Java with TypeScript, or Python with Go. They had 1,206 merged pull requests that changed both languages. From these we confirmed 86 cross-language bug fixes. Then we applied a strict rule: both languages must really need to change because of how they work together. Only 31 passed. The biggest cause was a contract or schema mismatch, which means the two sides disagree about the data they exchange. That was 11 of the 31."
+        },
+        {
+          "heading": "What I built",
+          "body": "Then I built two main things. The first is a graph that connects code across languages. It starts from per-language code indexes made with SCIP. Then it adds links for things like routes, headers, shared data types and protobuf services. There are 9,605 of these boundary links. From a labeled sample, we estimate that about 91 percent of the cross-language links are correct.\n\nThe second is the agent, and it works in steps. A read-only agent finds the related code on both sides. Next, a contract step checks what the two sides agree on and suggests possible fixes. Then an editing agent writes the patch. A validation gate checks for new basic errors, and visible tests can start another round. The hidden tests are only used for the final score, so the agent cannot see them. I also built the evaluation setup around all of this."
+        },
+        {
+          "heading": "What I found, and what it taught me",
+          "body": "The results were mostly not what we hoped for, and that is why I find them useful. First, the graph did not improve bug finding. On 12 bugs, a simple agent with only shell search, like grep, found both sides in every run. The two sides share a name, so search reaches the same code. Second, on five bugs that we could run, my system edited the developers' files on both sides more often, 4.0 of 5 bugs against 2.7 for the baseline. But correctness did not improve. Hidden tests only ever passed on one bug, and the baseline passed it more often, in all three runs against two.\n\nI also found a serious problem in the evaluation. Before I isolated the environment, 13 of 16 baseline runs had read the developers' real fix or later information, for example from Git history. So a run could look successful only because it found the answer. I added isolation and auditing, and I ran the experiments again. Later I found a second leak through the files of the graph tool, and I replaced those runs too.\n\nThe tests also have limits. In one bug, a patch could pass the test on the Go side and still handle the Python side wrongly. So my main lesson is this. A result that looks good is not enough. We need a way to check that the whole interaction really works. That is the problem I want to work on next."
+        }
+      ],
+      "speech": {
+        "label": "XLAgent in detail",
+        "cue": "\"What are you working on now?\" \"Explain XLAgent.\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-008",
+      "project": "journey",
+      "topic": "Common follow-ups",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "How did one project lead to the next?",
+      "answer": "Each project came from the limit of the one before it. LLM-ProS showed that most first attempts fail, so A-ProS asked whether feedback helps. A-ProS used clean contest problems, so XLAgent moved to real software. XLAgent then showed that our measurements can mislead us, and that is what I want to study next.",
+      "detail": [
+        "Each project came from the limit of the one before it. LLM-ProS measured one thing: can a model solve a hard problem on the first try? Mostly, it could not. But a first attempt is not how people work. When my code fails in a contest, I read the verdict and I try again. So the natural next question was whether a model can do the same.",
+        "That became A-ProS, where a critic explains the failure and the model tries again. It worked well on contest problems. But contest problems are clean. One program, clear rules and a judge that tests everything. Real software is not like that. As a software engineer, I see that one part can look correct while the full path is broken, because another part reads the data differently. So I moved to real repositories and to bugs between two languages. That became XLAgent.",
+        "In the first two projects, the judge told us clearly what passed. In XLAgent there is no perfect judge. Tests can check only one side, and agents can find the real answer by accident. So my focus changed. I started with the question, how good is the model? Now my question is, how do we know the result is real? That is the direction I want to continue in a PhD."
+      ],
+      "caution": "The papers use different models and tasks. Do not subtract their success rates and call the difference an effect of A-ProS.",
+      "locator": "LLM-ProS, A-ProS and XLAgent records; author research narrative",
+      "tags": [
+        "connection",
+        "thread",
+        "progression",
+        "how projects connect",
+        "research story"
+      ],
+      "followups": [
+        "What have you learned from your research so far?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "From measuring to feedback",
+          "body": "Each project came from the limit of the one before it. LLM-ProS measured one thing: can a model solve a hard problem on the first try? Mostly, it could not. But a first attempt is not how people work. When my code fails in a contest, I read the verdict and I try again. So the natural next question was whether a model can do the same."
+        },
+        {
+          "heading": "From contests to real software",
+          "body": "That became A-ProS, where a critic explains the failure and the model tries again. It worked well on contest problems. But contest problems are clean. One program, clear rules and a judge that tests everything. Real software is not like that. As a software engineer, I see that one part can look correct while the full path is broken, because another part reads the data differently. So I moved to real repositories and to bugs between two languages. That became XLAgent."
+        },
+        {
+          "heading": "From building to questioning the measurement",
+          "body": "In the first two projects, the judge told us clearly what passed. In XLAgent there is no perfect judge. Tests can check only one side, and agents can find the real answer by accident. So my focus changed. I started with the question, how good is the model? Now my question is, how do we know the result is real? That is the direction I want to continue in a PhD."
+        }
+      ],
+      "speech": {
+        "label": "How the projects connect",
+        "cue": "\"How are these projects related?\" \"Why did you move from one to the next?\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-009",
+      "project": "journey",
+      "topic": "Common follow-ups",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "What did you personally do across these projects?",
+      "answer": "In LLM-ProS I built the data and submission pipeline and analyzed the results. In A-ProS I built the orchestration, browser automation and logging, and I ran the memory and calibration studies. In XLAgent I carried out the project independently, with Md. Fahim Arefin as PI.",
+      "detail": [
+        "In LLM-ProS, I built the evaluation system. I designed the automatic collection and cleaning of the 166 ICPC problems. I built the submission pipeline to Codeforces Gym. Then I analyzed correctness, error types, and the use of time and memory. So I can trace one problem from the original statement to the final verdict.",
+        "In A-ProS, I designed the orchestration pipeline. I built the browser automation with Selenium and Playwright, including verdict capture. I built the SQLite logging. I also ran the memory study and the critic calibration analysis. Anika Tabassum and I share equal contribution, so I always give that credit clearly.",
+        "In XLAgent, I carried out the project independently, with Md. Fahim Arefin as the PI. I did the repository mining, the graph tooling, the localization and editing pipeline and the evaluation setup. I also investigated the leakage and the problems with the tests.\n\nWhen I talk about my work, I say I for the parts I built or ran, and we for the joint design and the paper's conclusions. Independent work does not mean nobody helped me. I had supervision and review. My claim is simple: I can explain every step of what I built, and its limits."
+      ],
+      "caution": "Ownership follows the author record, not author order. Do not give percentages of contribution.",
+      "locator": "Author contribution record for LLM-ProS, A-ProS and XLAgent",
+      "tags": [
+        "ownership",
+        "contribution",
+        "my role",
+        "what did you personally do",
+        "credit"
+      ],
+      "followups": [
+        "Can you tell me about your research journey?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "LLM-ProS",
+          "body": "In LLM-ProS, I built the evaluation system. I designed the automatic collection and cleaning of the 166 ICPC problems. I built the submission pipeline to Codeforces Gym. Then I analyzed correctness, error types, and the use of time and memory. So I can trace one problem from the original statement to the final verdict."
+        },
+        {
+          "heading": "A-ProS",
+          "body": "In A-ProS, I designed the orchestration pipeline. I built the browser automation with Selenium and Playwright, including verdict capture. I built the SQLite logging. I also ran the memory study and the critic calibration analysis. Anika Tabassum and I share equal contribution, so I always give that credit clearly."
+        },
+        {
+          "heading": "XLAgent, and how I give credit",
+          "body": "In XLAgent, I carried out the project independently, with Md. Fahim Arefin as the PI. I did the repository mining, the graph tooling, the localization and editing pipeline and the evaluation setup. I also investigated the leakage and the problems with the tests.\n\nWhen I talk about my work, I say I for the parts I built or ran, and we for the joint design and the paper's conclusions. Independent work does not mean nobody helped me. I had supervision and review. My claim is simple: I can explain every step of what I built, and its limits."
+        }
+      ],
+      "speech": {
+        "label": "My own part in each project",
+        "cue": "\"What exactly did you do yourself?\" \"What was your role?\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
+    },
+    {
+      "id": "journey-010",
+      "project": "journey",
+      "topic": "Common follow-ups",
+      "difficulty": "Core",
+      "source": "profile",
+      "question": "What have you learned from your research so far?",
+      "answer": "I learned three things. A result that looks good is not proof. A negative result is still useful if it is honest. And the evaluation is part of the research, so it needs as much care as the system. Now I want to learn how to measure these things properly.",
+      "detail": [
+        "The first thing I learned is that a good-looking result is not proof. In LLM-ProS, code that looked right failed in front of a real judge. In A-ProS, a critic could sound sure and still be wrong. In XLAgent, a patch could touch both languages and still not fix the bug. So now, when I see a good number, my first question is, what does this number really show?",
+        "The second thing is that a negative result is still useful, if it is honest. In XLAgent, the graph did not improve bug finding. I could have tried to hide that behind other numbers, but I reported it. Understanding why it failed was more useful, because it showed that text search was already enough. The memory result in A-ProS was similar. It was not statistically significant, so I do not say that it was.",
+        "The third thing is that the evaluation is part of the research. Finding that 13 of 16 baseline runs had read the real fix changed how I think. If the setup is wrong, every number after it is wrong too. So I now spend real time checking the setup before I trust the result.\n\nWhat I still need is deeper training. I want to learn program analysis, statistics and experiment design properly. That is why I want to do a PhD. I do not only want to build systems that look like they work. I want to learn how to show that they do."
+      ],
+      "caution": "A lesson from these projects is not a general result about all agents or all software.",
+      "locator": "LLM-ProS, A-ProS and XLAgent records; author research narrative",
+      "tags": [
+        "lessons",
+        "what did you learn",
+        "takeaway",
+        "negative results",
+        "PhD motivation"
+      ],
+      "followups": [
+        "How did one project lead to the next?"
+      ],
+      "essential": true,
+      "answerSections": [
+        {
+          "heading": "A good-looking result is not proof",
+          "body": "The first thing I learned is that a good-looking result is not proof. In LLM-ProS, code that looked right failed in front of a real judge. In A-ProS, a critic could sound sure and still be wrong. In XLAgent, a patch could touch both languages and still not fix the bug. So now, when I see a good number, my first question is, what does this number really show?"
+        },
+        {
+          "heading": "Negative results are useful",
+          "body": "The second thing is that a negative result is still useful, if it is honest. In XLAgent, the graph did not improve bug finding. I could have tried to hide that behind other numbers, but I reported it. Understanding why it failed was more useful, because it showed that text search was already enough. The memory result in A-ProS was similar. It was not statistically significant, so I do not say that it was."
+        },
+        {
+          "heading": "The evaluation is part of the research",
+          "body": "The third thing is that the evaluation is part of the research. Finding that 13 of 16 baseline runs had read the real fix changed how I think. If the setup is wrong, every number after it is wrong too. So I now spend real time checking the setup before I trust the result.\n\nWhat I still need is deeper training. I want to learn program analysis, statistics and experiment design properly. That is why I want to do a PhD. I do not only want to build systems that look like they work. I want to learn how to show that they do."
+        }
+      ],
+      "speech": {
+        "label": "What I learned",
+        "cue": "\"What did you learn from all of this?\" \"What is your biggest takeaway?\""
+      },
+      "editorialReview": {
+        "service": "Manual source review",
+        "sourceChecked": true,
+        "date": "2026-11-05"
+      },
+      "answerFormat": "complete-structured-answer"
     }
   ],
   "glossary": [
@@ -14325,11 +14842,11 @@
     "xl-setup": "0cce6389285de036f2c42a11a5a33d887ad787d125bf50f0d895abe8f297c7e4"
   },
   "answerRevision": {
-    "completeAnswers": 292,
-    "structuredSections": 876,
+    "completeAnswers": 302,
+    "structuredSections": 906,
     "languageReview": "WriteHuman MCP; factual claims and section structure preserved against the source-based drafts",
     "inputWords": 32469,
-    "manualSourceReviewedAdditions": 84
+    "manualSourceReviewedAdditions": 94
   },
   "studyPacks": [
     {

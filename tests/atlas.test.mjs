@@ -149,6 +149,29 @@ test('interview questions are found by the terms used in the conversation',()=>{
  assert.ok(texts('BugLens accuracy').includes("Evident's accuracy is lower than BugLens. Is it worse?"));
  assert.ok(search(index,'',{project:'haonan'}).length===30);
 });
+test('research journey speeches stay complete, spoken and in plain English',()=>{
+ const speeches=data.questions.filter(q=>q.project==='journey');
+ assert.equal(speeches.length,10);
+ assert.deepEqual([...new Set(speeches.map(q=>q.topic))],['The whole story','Project by project','Common follow-ups']);
+ for(const q of speeches){
+  assert.ok(q.speech.label.length>5&&q.speech.cue.length>10,q.id);
+  const text=q.detail.join(' '),words=text.split(/\s+/).length,sentences=text.split(/(?<=[.?!:])\s+/).length;
+  assert.ok(words/sentences<=15.5,`${q.id} sentences are too long for spoken B1 to B2 English`);
+  assert.doesNotMatch(text,/ablation|oracle|thereby|utili[sz]e|leverage|furthermore|moreover|evidence-grounded|methodolog|operational/i,q.id);
+ }
+ assert.ok(speeches[0].detail.join(' ').split(/\s+/).length>700);
+});
+test('research journey speeches keep private records out and claims bounded',()=>{
+ const text=JSON.stringify(data.questions.filter(q=>q.project==='journey'));
+ assert.doesNotMatch(text,/CGPA|\bGPA\b|father|mother|tutor|resit|scholarship|\bMSR\b|Concordia|Fall 2027|February 2025|August 2026/i);
+ const full=data.questions.find(q=>q.id==='journey-001').detail.join(' ');
+ assert.match(full,/167 ICPC problems, GPT-5 went from 39 solved to between 85 and 90/);
+ assert.match(full,/not statistically significant/);
+ assert.match(full,/under review/);
+ assert.match(full,/were not more correct/);
+ assert.match(full,/equal contribution with Anika Tabassum/);
+ assert.doesNotMatch(JSON.stringify(data.questions.find(q=>q.id==='profile-001')),/February 2025/);
+});
 test('title and formal-feedback queries retrieve complete relevant answers',()=>{
  assert.ok(texts('APPROS reliable').includes('What exactly does reliable mean in A-ProS?'));
  assert.ok(texts('towards autonomous').includes('What does the full A-ProS title mean?'));
